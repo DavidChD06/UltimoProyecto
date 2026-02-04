@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - Bank Management App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        ul {
+            margin-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            text-align: center;
+            color: #7f8c8d;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bank Management Application</h1>
+
+    <div class="card">
+        <p>
+            The <strong>Bank Management Application</strong> is a comprehensive desktop system developed in JavaFX 
+            designed to manage personal banking data securely. It follows a <strong>Client-Server architecture</strong>, 
+            synchronizing data in real-time with a RESTful backend.
+        </p>
+    </div>
+
+    <h2>1. User Access & Security</h2>
+    <div class="card">
+        <p>Security is the core of the application logic:</p>
+        <ul>
+            <li><strong>Sign In:</strong> Authenticates users via Email and Password against the server database.</li>
+            <li><strong>Sign Up:</strong> New users can register with strict validation for personal fields (ZIP code, Phone format, Email pattern).</li>
+            <li><strong>Password Management:</strong> Includes a dedicated module to update credentials securely, enforcing complexity rules (uppercase, numbers, length).</li>
+        </ul>
+    </div>
+
+    <h2>2. Account Management</h2>
+    <div class="card">
+        <p>The main dashboard allows complete control over bank accounts:</p>
+        <ul>
+            <li><strong>Real-time View:</strong> Displays account details including Balance, Type, and Credit Line.</li>
+            <li><strong>Creation:</strong> Users can open new accounts instantly. The system auto-generates IDs and validates initial balances.</li>
+            <li><strong>Editing:</strong> Allows modification of descriptions and credit lines (for Credit accounts only) directly in the table.</li>
+            <li><strong>Deletion:</strong> Logic prevents deleting accounts that still have active movements.</li>
+        </ul>
+    </div>
+
+    <h2>3. Transaction Processing (Movements)</h2>
+    <div class="card">
+        <p>Each account has a detailed history of movements accessible via the interface:</p>
+        <ul>
+            <li><strong>Operations:</strong> Supports <em>Deposits</em> and <em>Payments</em>.</li>
+            <li><strong>Balance Updates:</strong> The account balance is automatically recalculated locally and on the server after every transaction.</li>
+            <li><strong>Undo Function:</strong> Users can reverse the last operation performed if needed.</li>
+        </ul>
+    </div>
+
+    <h2>4. Technical Specifications</h2>
+    <div class="card">
+        <ul>
+            <li><strong>Frontend:</strong> JavaFX 8 (FXML & CSS).</li>
+            <li><strong>Backend Communication:</strong> Jersey REST Client (XML).</li>
+            <li><strong>Design Pattern:</strong> Model-View-Controller (MVC).</li>
+            <li><strong>Features:</strong> Contextual Help, Exception Handling, and Input Validation.</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Bank App Project. Developed for <em>Desarrollo de Interfaces</em>.
+    </div>
+
+</body>
+</html>

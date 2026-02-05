@@ -125,7 +125,6 @@ public class MovementController {
             ObservableList<String> type = FXCollections.observableArrayList("Deposit","Payment");
             selectType.setItems(type);
 
-            tfAmount.focusedProperty().addListener(this::handleAmountOnFocusedChange);
             selectType.focusedProperty().addListener(this::handleTypeOnFocusedChange);
                     
             btNewMovement.setOnAction(this::handlebtNewMovementOnAction);
@@ -162,21 +161,6 @@ public class MovementController {
     }
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    private void handleAmountOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
-        try{
-            /*if(oldValue){
-                if(tfAmount.getText().isEmpty()){
-                    throw new Exception("The amount is empty");
-                }
-                lbErrorAmount.setText("");
-            }*/
-        }
-        catch (Exception e){
-            //lbErrorAmount.setText(e.toString());
-            LOGGER.info(e.getMessage());
-        }
     }
     private void handleTypeOnFocusedChange(ObservableValue observable, Boolean oldValue, Boolean newValue){
         try{

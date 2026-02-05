@@ -313,17 +313,6 @@ public class MovementController {
     }
 }
 /*
-    private void handlebtCancelOnAction(ActionEvent event) {
-        try {
-            //this.stage.close();
-            new Alert(AlertType.INFORMATION, "Are you sure you want to leave?").showAndWait();
-            
-            movementStage.close();
-
-        } catch (InternalServerErrorException e) {
-            new Alert(AlertType.INFORMATION, "Internal server error, please wait or contact your service provider").showAndWait();
-        }
-    }
 
     private void handlebtUndoOnAction(ActionEvent event) {
         try{
@@ -363,75 +352,6 @@ public class MovementController {
         }
     }
 
-    private void handlebtNewMovementOnAction(ActionEvent event){
-        try{
-            Movement movement = new Movement();
-            Date timestamp= new Date();
-            String tipo = (String) selectType.getValue();
-            double amount = Double.valueOf(tfAmount.getText());
-            lbBalance.setText(String.valueOf(account.getBalance()));
-            double newBalance = 0.0;
-           /* if(tfAmount.getText().isEmpty()){
-                lbErrorAmount.setText("The amount is empty");
-                throw new IllegalArgumentException("The amount is empty");
-            }
-            if(!selectType.hasProperties()){
-                lbErrorAmount.setText("You have to select the type");
-                throw new IllegalArgumentException("You have to select the type");
-            }
-            //lbErrorAmount.setText("");
-            double balance = account.getBalance();
-            double line = account.getCreditLine();
-            
-            movement.setAmount(amount);
-            movement.setDescription(tipo);
-            movement.setTimestamp(timestamp);
-            if(tipo.equals("Payment")){
-                if(balance>=amount){
-                    newBalance = balance - amount;
-                    movement.setBalance(newBalance);
-                    this.account.setBalance(newBalance);
-                    //accClient.updateAccount_XML(account);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                }
-                if(balance+line>= amount){
-                    double n = amount-balance;
-                    account.setCreditLine(line-n);
-                    account.setBalance(0.0);
-                    movement.setBalance(0.0);
-                    
-                    //accClient.updateAccount_XML(account);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                } 
-                if(balance+line<amount){
-                    throw new Exception("You don't have enough balance");
-                }      
-            }
-            if(tipo.equals("Deposit")){
-                newBalance = balance + amount;
-                movement.setBalance(newBalance);
-                this.account.setBalance(newBalance);
-                accClient.updateAccount_XML(account);
-                lbBalance.setText(String.valueOf(account.getBalance()));
-            }
-            
-            accClient.updateAccount_XML(this.account);
-            tbMovement.getItems().add(movement);
-            tbMovement.refresh();
-            
-            btUndo.setDisable(false);
-            restClient.create_XML(movement, account.getId().toString());
-           // LOGGER.info(movement.toString());
-            
-        }
-        catch(IllegalArgumentException | ClientErrorException e){
-            LOGGER.info(e.getMessage());
-        }
-        catch(Exception e){
-            lbGeneralError.setText(e.toString());
-        }
-
-    }
 
 }
 

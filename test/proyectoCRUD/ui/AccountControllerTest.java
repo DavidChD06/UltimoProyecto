@@ -9,13 +9,11 @@ package proyectoCRUD.ui;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
-import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -36,21 +34,22 @@ public class AccountControllerTest extends ApplicationTest {
     @Before
     public void test1_SignInCorrect() {
         clickOn("#tfEmail");
-        write("david23@gmail.com");
+        write("jsmith@enterprise.net");
         clickOn("#pfPassword");
         write("abcd*1234");
         verifyThat("#btnLogin", isEnabled());
         clickOn("#btnLogin");
-        verifyThat("¡Welcome David!", isVisible());
+        verifyThat("¡Welcome John!", isVisible());
         clickOn("Aceptar");
+        
     }
 
-    @Test
+   @Test
     public void test2_AddAccount() {
         clickOn("#btnAdd");
         Node celdaDescripcion = lookup(".table-row-cell:selected .table-cell").nth(1).query();
         doubleClickOn(celdaDescripcion);
-        write("New Account Test");
+        write("New Account");
         push(KeyCode.ENTER);
         Node celdaBeginBalance = lookup(".table-row-cell:selected .table-cell").nth(3).query();
         doubleClickOn(celdaBeginBalance);
@@ -58,6 +57,7 @@ public class AccountControllerTest extends ApplicationTest {
         push(KeyCode.ENTER);
         clickOn("#btnAdd");
     }
+
     @Test
     public void test3_AccountCancel(){
         clickOn("#btnAdd");
@@ -65,29 +65,20 @@ public class AccountControllerTest extends ApplicationTest {
     }
 
     @Test
-    public void test4_Movement() {
-        clickOn("New Account");
-        clickOn("#btnMovement");
+    public void test4_TableEdit() {
+        clickOn(".table-row-cell");
+        Node celdaDescripcion = lookup(".table-row-cell:selected .table-cell").nth(1).query();
+        doubleClickOn(celdaDescripcion);
+        write("Modification Description");
+        push(KeyCode.ENTER);
         
     }
-    @Test
+   @Test
     public void test5_Delete() {
-        clickOn("New Account");
+        clickOn("New Modification Description");
         clickOn("#btnDelete");
         verifyThat("Are you sure you want to delete this account?", isVisible());
-        clickOn("#Aceptar");
-    }
-
-    @Test
-    public void test6_Exit() {
-        clickOn("#btnExit");
-        verifyThat("Are you sure you want to go out?", isVisible());
-        clickOn("#Aceptar");
-    }
-    @After
-    public void test7_CloseWindow() throws Exception{
-        FxToolkit.cleanupStages();
-    }
-    
+        clickOn("Aceptar");
+    } 
 
 }

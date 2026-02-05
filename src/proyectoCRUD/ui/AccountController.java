@@ -73,7 +73,6 @@ public class AccountController {
     private Stage stage;
     private Customer customer;
     private AccountRESTClient client = new AccountRESTClient();
-    private final Stage AccountStage = new Stage();
     private Account newAccounts;
 
     /**
@@ -91,13 +90,10 @@ public class AccountController {
             Scene scene = new Scene(root);
             //Se establecen las propiedades de la vetana.
             stage.setScene(scene);
-            AccountStage.setScene(scene);
             this.stage = stage;
             //Establecer el titulo de la ventana
-            AccountStage.setTitle("Account");
             //La ventana no es redimensionable
             stage.setResizable(false);
-            AccountStage.setResizable(false);
             //El botón Delete está deshabilitado.
             btnDelete.setDisable(true);
             //El botón Movements está deshabilitado hasta seleccionar una cuenta
@@ -195,10 +191,10 @@ public class AccountController {
             tbvAccounts.setEditable(true);
             //Mostrar la ventana
             stage.show();
-            AccountStage.show();
+
             //Cerrar la ventana
             stage.setOnCloseRequest(this::handleExitOnAction);
-            AccountStage.setOnCloseRequest(this::handleExitOnAction);
+
 
         } catch (Exception e) {
             handleAlert("Error al obtener los datos");
@@ -597,7 +593,6 @@ Account account = new Account();
 
                 SignInController controller = loader.getController();
                 controller.init(this.stage, root);
-                AccountStage.close();
             }
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());

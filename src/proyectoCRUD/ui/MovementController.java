@@ -197,8 +197,7 @@ public class MovementController {
         try {
             //Ultimo movimiento
             Movement lastMovement = tbMovement.getItems().stream()
-                    .max(Comparator.comparing(Movement::getTimestamp))
-                    .orElse(null);
+                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
 
             if (lastMovement == null) {
                 throw new Exception("No movements to undo");

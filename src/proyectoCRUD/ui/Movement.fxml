@@ -11,6 +11,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
        <children>
+            <fx:include fx:id="menuAccount" source="Menu.fxml" />
           <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="363.0" prefWidth="708.0">
             <columns>
                 <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="232.0" text="DATE" />

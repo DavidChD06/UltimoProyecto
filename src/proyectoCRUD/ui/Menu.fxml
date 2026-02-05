@@ -8,13 +8,13 @@
    <children>
       <MenuBar prefHeight="26.0" prefWidth="1024.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Operations">
+          <Menu fx:id="Operations" mnemonicParsing="false" text="Operations">
             <items>
               <MenuItem fx:id="menuLogOut" mnemonicParsing="false" onAction="#menuLogOut" text="Log out" />
                   <MenuItem fx:id="menuExitApp" mnemonicParsing="false" onAction="#menuExitApp" text="Exit App" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu fx:id="Help" mnemonicParsing="false" text="Help">
             <items>
               <MenuItem fx:id="helpCustomer" mnemonicParsing="false" onAction="#helpCustomer" text="Customer" />
                   <MenuItem fx:id="helpAccount" mnemonicParsing="false" onAction="#helpAccount" text="Account" />

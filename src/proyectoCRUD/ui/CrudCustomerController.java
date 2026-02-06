@@ -531,10 +531,7 @@ public class CrudCustomerController {
             if(account != null &&  !account.isEmpty()){
                 throw new InternalServerErrorException("The user has associated accounts");
             }
-            if (customer.getEmail().equals("admin@admin.com")){
-                throw new Exception("Selected user is an administrator");
-            }
-            
+
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this Customer?",ButtonType.YES,ButtonType.NO);
             alert.setTitle("Deletion prompt");
             alert.showAndWait();

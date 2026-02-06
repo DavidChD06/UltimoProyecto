@@ -51,8 +51,8 @@ public class MovementControllerTest extends ApplicationTest {
         
     }
     
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void test2_UndoMovement() {
        // verifyThat("#movementViewPane", isVisible());
         verifyThat("#btUndo", isVisible());
@@ -62,29 +62,26 @@ public class MovementControllerTest extends ApplicationTest {
     }
     @Test
     //@Ignore
-    public void test4_NewMovement() {
+    public void test3_NewMovement() {
         clickOn("#tfAmount");
-        write("200");
+        write("250");
         clickOn("#selectType");
         clickOn("Deposit");
         
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
+        
     }
     //@Test
-    //@Ignore
-    public void test5_UndoAfterNewMovement() {
+    @Ignore
+    public void test4_UndoAfterNewMovement() {
         clickOn("#btUndo");
         verifyThat("#btUndo", isDisabled());
     }
-    /*@Test
+    @Test
     //@Ignore
     public void test9_ExitMovement() {
         clickOn("#btCancel");
+        clickOn("Aceptar");
     }
-    
-    
-    public MovementControllerTest() {
-        
-    }*/
 }

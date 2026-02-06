@@ -57,22 +57,9 @@ public class MovementController {
     @FXML
     private Label lbErrorAmount;
     @FXML
-    private Label lbBalance;
-    @FXML
     private Label lbGeneralError;
     @FXML
     private TextField tfAmount;
-    
-    /*@FXML
-    private TableView tbMovement;
-    @FXML
-    private TableColumn tbColDate;
-    @FXML
-    private TableColumn tbColAmount;
-    @FXML
-    private TableColumn tbColType;
-    @FXML
-    private TableColumn tbColBalance;*/
     @FXML
     private TableView<Movement> tbMovement;
     @FXML
@@ -98,19 +85,9 @@ public class MovementController {
     MovementRESTClient restClient = new MovementRESTClient();
     AccountRESTClient accClient = new AccountRESTClient();
     
-    //long accountId = 2654785441L;
-    //String id = String.valueOf(account.getId());
-    
-    
 
     public void init(Stage stage, Parent root) {
         try {
-            /*this.account = new Account();
-            this.account.setId(accountId);
-            this.account.setBalance(2000.00);*/
-            
-            //this.stage = stage;
-            //stage.setScene(scene);
             
             Scene scene = new Scene(root);
             //movementStage.initModality(Modality.APPLICATION_MODAL);
@@ -142,14 +119,13 @@ public class MovementController {
             
                     
             lbIdAcount.setText(account.getId().toString());
-            lbBalance.setText(account.getBalance().toString());
+
             
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
             
         } catch (Exception e) {
-            //new Alert(AlertType.INFORMATION,e.getLocalizedMessage()).showAndWait();
-            //LOGGER.warning(e.getLocalizedMessage());
+            
             LOGGER.info(e.getMessage());
         }
 
@@ -216,7 +192,7 @@ public class MovementController {
             accClient.updateAccount_XML(account);
             restClient.remove(movementId);
 
-            lbBalance.setText(String.format("%.2f", account.getBalance()));
+            //lbBalance.setText(String.format("%.2f", account.getBalance()));
             tbMovement.getItems().remove(lastMovement);
             tbMovement.refresh();
             lbGeneralError.setText("");
@@ -247,8 +223,7 @@ public class MovementController {
             double newBalance = balanceActual;
             double newLine = lineActual;
             
-            lbBalance.setText(String.valueOf(account.getBalance()));
-            
+            //lbBalance.setText(String.valueOf(account.getBalance()));
            
             if("Payment".equals(tipo)){
                 if(balanceActual + lineActual < amount){
@@ -276,7 +251,7 @@ public class MovementController {
             accClient.updateAccount_XML(this.account);
             
             restClient.create_XML(movement, account.getId().toString());
-            lbBalance.setText(String.format("%.2f", newBalance));
+            //lbBalance.setText(String.format("%.2f", newBalance));
             
             tbMovement.getItems().add(movement);
             tbMovement.refresh();

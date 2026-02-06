@@ -143,9 +143,9 @@ public class SignInController {
                 alert.setContentText("¡Welcome "+customer.getFirstName()+"!");
                 alert.showAndWait();
             //Abrir la ventana de change password
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("ChangePassword.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Account.fxml"));
                 Parent root = loader.load();
-                ChangePasswordController controller = loader.getController();
+                AccountController controller = loader.getController();
 
                 controller.setCustomer(customer);
                 controller.init(this.stage, root);

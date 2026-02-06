@@ -38,6 +38,8 @@ import proyectoCRUD.model.Customer;
 import proyectoCRUD.ui.MenuController;
 
 /**
+ * Controller class for the Customer CRUD view.
+ * Handles the interaction between the UI and the logic layer for managing Customers.
  *
  * @author david
  */
@@ -86,11 +88,19 @@ public class CrudCustomerController {
     private final CustomerRESTClient clientManager = new CustomerRESTClient();
     
     private static final Logger LOGGER=Logger.getLogger("projectinterfaces.ui");
+    /**
+     * Initializes the controller, sets up the stage, and configures the table columns.
+     * Defines cell factories and edit commit handlers for data validation and updates.
+     *
+     * @param stage The stage where the scene will be displayed.
+     * @param root  The root node of the FXML hierarchy.
+     */
     
     public void init(Stage stage, Parent root) {
-        
+        //Creating logger
         LOGGER.info("Initializing window");
         
+        //Loading window
         scene = new Scene(root); 
         CustomerStage.setScene(scene);
         CustomerStage.setTitle("Customers administration");
@@ -103,6 +113,7 @@ public class CrudCustomerController {
         
         tbCustomers.setEditable(true);
         
+        //Creating handler methods
         bExit.setOnAction(this::handleBtExitOnAction);
         bDelete.setOnAction(this::handleBtDeleteOnAction);
         bRefresh.setOnAction(this::handleBtRefreshOnAction);
@@ -114,9 +125,14 @@ public class CrudCustomerController {
         tbID.setCellValueFactory(new PropertyValueFactory<>("id"));
         tbName.setEditable(false);
         
+        //Creating both cellValuefactory and cellFactory for handling tableview
+        
+        
+        //Field name handler
         tbName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         tbName.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbName.setEditable(true);
+        //Lambda method for validating field name on change via cell editing
         tbName.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(
@@ -146,9 +162,11 @@ public class CrudCustomerController {
                 
         });
         
+        //Field middle initial handler
         tbMidInit.setCellValueFactory(new PropertyValueFactory<>("middleInitial"));
         tbMidInit.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbMidInit.setEditable(true);
+        //Lambda method for validating field middle initial on change via cell editing
         tbMidInit.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -177,10 +195,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field surname handler
         tbSurname.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         tbSurname.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbSurname.setEditable(true);
+        //Lambda method for validating field surname on change via cell editing
         tbSurname.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -209,10 +228,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field street handler
         tbStreet.setCellValueFactory(new PropertyValueFactory<>("street"));
         tbStreet.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbStreet.setEditable(true);
+        //Lambda method for validating field street on change via cell editing
         tbStreet.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -241,10 +261,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field city handler
         tbCity.setCellValueFactory(new PropertyValueFactory<>("city"));
         tbCity.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbCity.setEditable(true);
+        //Lambda method for validating field city on change via cell editing
         tbCity.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -273,10 +294,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field state handler
         tbState.setCellValueFactory(new PropertyValueFactory<>("state"));
         tbState.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbState.setEditable(true);
+        //Lambda method for validating field state on change via cell editing
         tbState.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -305,10 +327,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field zip handler
         tbZip.setCellValueFactory(new PropertyValueFactory<>("zip"));
         tbZip.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         tbZip.setEditable(true);
+        //Lambda method for validating field zip on change via cell editing
         tbZip.setOnEditCommit(
                 (CellEditEvent<Customer, Integer> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -337,10 +360,11 @@ public class CrudCustomerController {
                 
         });
     
-        
+        //Field email handler
         tbEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         tbEmail.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbEmail.setEditable(true);
+        //Lambda method for validating field email on change via cell editing
         tbEmail.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -369,10 +393,11 @@ public class CrudCustomerController {
                 
         });
         
-        
+        //Field phone handler
         tbPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         tbPhone.setCellFactory(TextFieldTableCell.forTableColumn(new LongStringConverter()));
         tbPhone.setEditable(true);
+                //Lambda method for validating field phone on change via cell editing
         tbPhone.setOnEditCommit(
                 (CellEditEvent<Customer, Long> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -401,9 +426,11 @@ public class CrudCustomerController {
                 
         });
         
+        //Field password handler
         tbPassw.setCellValueFactory(new PropertyValueFactory<>("password"));
         tbPassw.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbPassw.setEditable(true);
+        //Lambda method for validating field password on change via cell editing
         tbPassw.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
@@ -436,7 +463,12 @@ public class CrudCustomerController {
        
       
     } 
-    
+    /**
+     * Handles the action event when the exit button is clicked or the window is closed.
+     * Shows a confirmation alert before closing the stage.
+     *
+     * @param event The event that triggered this action.
+     */
     private void handleBtExitOnAction(Event event){
         try{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
@@ -455,7 +487,14 @@ public class CrudCustomerController {
             new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
-    
+    /**
+     * Listener for selection changes in the customer table.
+     * Enables or disables the delete button based on whether an item is selected.
+     *
+     * @param observable The `ObservableValue` which value changed.
+     * @param oldValue   The old value.
+     * @param newValue   The new value.
+     */
     private void handleCustomerTableSelectionChanged(ObservableValue observable, Object oldValue, Object newValue){
         try{
             if(newValue != null){
@@ -470,6 +509,13 @@ public class CrudCustomerController {
         }
     }
     
+    /**
+     * Handles the action event when the delete button is clicked.
+     * Validates if the customer has associated accounts or is an administrator before deletion.
+     * Asks for user confirmation before removing the customer from the database and the table.
+     *
+     * @param event The event that triggered this action.
+     */
     private void handleBtDeleteOnAction(Event event){
         try{
             Customer customer = (Customer) tbCustomers.getSelectionModel().getSelectedItem();
@@ -506,6 +552,12 @@ public class CrudCustomerController {
         }
         
     }
+    /**
+     * Handles the action event when the refresh button is clicked.
+     * Reloads the customer data from the server into the table.
+     *
+     * @param event The event that triggered this action.
+     */
     private void handleBtRefreshOnAction(Event event){
         try{
             reloadTable();
@@ -515,7 +567,12 @@ public class CrudCustomerController {
             new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
-    
+    /**
+     * Handles the action event when the add button is clicked.
+     * Creates a new empty customer in the database, adds it to the table, and focuses on the new row.
+     *
+     * @param event The event that triggered this action.
+     */
     private void handleBtAddOnAction(Event event){
         try{
             Customer customer = new Customer();
@@ -542,7 +599,9 @@ public class CrudCustomerController {
             new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
-    
+    /**
+     * Fetches all customers from the server using the REST client and updates the TableView items.
+     */
     private void reloadTable(){
         
         GenericType<List<Customer>> customers = new GenericType<List<Customer>>() {};

@@ -119,23 +119,26 @@ public class CrudCustomerController {
         tbName.setEditable(true);
         tbName.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(
                                         t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
+                    String oldValue = item.getFirstName();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>30 || !newValue.trim().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
                         throw new Exception("Name field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setFirstName(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setFirstName(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -148,23 +151,25 @@ public class CrudCustomerController {
         tbMidInit.setEditable(true);
         tbMidInit.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getMiddleInitial();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>1 || !newValue.trim().matches("[A-Z]+")){
                         throw new Exception("Middle initial field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setMiddleInitial(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setMiddleInitial(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -178,23 +183,25 @@ public class CrudCustomerController {
         tbSurname.setEditable(true);
         tbSurname.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getLastName();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>30 || !newValue.trim().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
                         throw new Exception("Surname field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setLastName(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setLastName(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -208,23 +215,25 @@ public class CrudCustomerController {
         tbStreet.setEditable(true);
         tbStreet.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
                     String oldValue = item.getFirstName();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>30 || !newValue.trim().matches("[0-9a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
-                        throw new Exception("City field not valid");
+                        throw new Exception("Street field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setStreet(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setStreet(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -238,23 +247,25 @@ public class CrudCustomerController {
         tbCity.setEditable(true);
         tbCity.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getCity();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>30 || !newValue.trim().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
                         throw new Exception("City field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setCity(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setCity(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -268,23 +279,25 @@ public class CrudCustomerController {
         tbState.setEditable(true);
         tbState.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getState();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || newValue.trim().length()>30 || !newValue.trim().matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")){
                         throw new Exception("State field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setState(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setState(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -298,22 +311,25 @@ public class CrudCustomerController {
         tbZip.setEditable(true);
         tbZip.setOnEditCommit(
                 (CellEditEvent<Customer, Integer> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     Integer newValue = t.getNewValue();
+                    Integer oldValue = item.getZip();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.toString().trim().isEmpty() || newValue.toString().trim().length()>5 || newValue.toString().trim().length()<5 || !newValue.toString().trim().matches("[0-9]+")){
                         throw new Exception("Zip field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setZip(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setZip(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -327,23 +343,25 @@ public class CrudCustomerController {
         tbEmail.setEditable(true);
         tbEmail.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getEmail();
+                try{
+                    //1)
+                    
                     //2)
                     if(!newValue.trim().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$") || newValue.trim().isEmpty() || newValue.trim().length()>100){
                         throw new Exception("Email field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setEmail(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setEmail(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -357,23 +375,25 @@ public class CrudCustomerController {
         tbPhone.setEditable(true);
         tbPhone.setOnEditCommit(
                 (CellEditEvent<Customer, Long> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     Long newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    Long oldValue = item.getPhone();
+                try{
+                    //1)
+                    
                     //2)
                     if(!newValue.toString().trim().matches("[0-9 +]+") || newValue.toString().trim().length()>15 || newValue.toString().trim().isEmpty()){
                         throw new Exception("Phone field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setPhone(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setPhone(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -386,23 +406,25 @@ public class CrudCustomerController {
         tbPassw.setEditable(true);
         tbPassw.setOnEditCommit(
                 (CellEditEvent<Customer, String> t) -> {
-                try{
-                    //1)
                     Customer item = ((Customer) t.getTableView().getItems().get(t.getTablePosition().getRow())); 
                     String newValue = t.getNewValue();
-                    String oldValue = item.getFirstName();
+                    String oldValue = item.getPassword();
+                try{
+                    //1)
+                    
                     //2)
                     if(newValue.trim().isEmpty() || !newValue.trim().matches("^(?=.*[A-Z])(?=.*\\d).{5,30}$")){
                         throw new Exception("Password field not valid");
                     }
                     //3)
-                    clientManager.edit_XML(item, item.getId());
-                    //4)
                     item.setPassword(newValue);
+                    //4)
+                    clientManager.edit_XML(item, item.getId());
                     //5)
                     tbCustomers.refresh();
                 }  
                 catch(Exception e){
+                    item.setPassword(oldValue);
                     LOGGER.info(e.getMessage());
                     tbCustomers.refresh();
                     new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
@@ -462,6 +484,9 @@ public class CrudCustomerController {
 
             if(account != null &&  !account.isEmpty()){
                 throw new InternalServerErrorException("The user has associated accounts");
+            }
+            if (customer.getEmail().equals("admin@admin.com")){
+                throw new Exception("Selected user is an administrator");
             }
             
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this Customer?",ButtonType.YES,ButtonType.NO);

@@ -33,19 +33,7 @@ public class MenuController {
 
     @FXML
     public void menuLogOut(ActionEvent event) {
-      try {
 
-            Stage stage = getAccountStage(event);
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignIn.fxml"));
-            Parent root = loader.load();
-            SignInController controller = loader.getController();
-            controller.init(stage, root);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Log Out Error", "Could not load the sign-in window.");
-        }
     }
 
     @FXML

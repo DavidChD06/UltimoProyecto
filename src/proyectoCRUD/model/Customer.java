@@ -68,9 +68,16 @@ public class Customer implements Serializable {
      * Customer's password for basic authentication.
      */
     private String password;
-    /**
-     * Relational field for customer's accounts.
-     */
+
+    private Set<Account> accounts;
+    
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+    
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
+    }
     /**
      * 
      * @return the id of the customer.

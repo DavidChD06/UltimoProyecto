@@ -32,6 +32,7 @@ import proyectoCRUD.model.Customer;
 /**
  *
  * @author david
+ * @fixme Añadir un método de test que compruebe que los datos que presenta la tabla son objetos Customer.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CrudCustomerControllerTest extends ApplicationTest{
@@ -69,6 +70,8 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         verifyThat("#bAdd", isEnabled());
         clickOn("#bAdd");
         assertEquals("The row has not been added!!!", rowsCount + 1, table.getItems().size());
+        //FIXME El assert anterior es insuficiente. Añadir uno que compruebe que el nuevo Customer 
+        //FIXME con los datos iniciales está entre los items de la tabla.
         Customer customer = (Customer) table.getSelectionModel().getSelectedItem();
         
     }
@@ -131,6 +134,9 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         verifyThat("Are you sure you want to delete this Customer?", isVisible());
         clickOn("Sí"); 
         assertEquals("The row has not been deleted", rowsCount - 1, table.getItems().size());
+        //FIXME El assert anterior es insuficiente. Añadir uno que compruebe que el Customer seleccionado 
+        //FIXME para borrar NO está entre los items de la tabla.
+        
     }
 
     

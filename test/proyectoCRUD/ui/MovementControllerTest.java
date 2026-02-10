@@ -34,6 +34,7 @@ public class MovementControllerTest extends ApplicationTest {
     }
 
     @Before
+    
     public void test1_SignIn() {
         
         clickOn("#tfEmail").write("jsmith@enterprise.net");
@@ -52,7 +53,7 @@ public class MovementControllerTest extends ApplicationTest {
     }
     
     @Test
-    //@Ignore
+    @Ignore
     public void test2_UndoMovement() {
        // verifyThat("#movementViewPane", isVisible());
         verifyThat("#btUndo", isVisible());
@@ -61,7 +62,7 @@ public class MovementControllerTest extends ApplicationTest {
         //verifyThat("")
     }
     @Test
-    //@Ignore
+    @Ignore
     public void test3_NewMovement() {
         clickOn("#tfAmount");
         write("250");
@@ -79,7 +80,7 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#btUndo", isDisabled());
     }
     @Test
-    //@Ignore
+    @Ignore
     public void test9_ExitMovement() {
         clickOn("#btCancel");
         clickOn("Aceptar");

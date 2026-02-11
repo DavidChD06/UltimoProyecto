@@ -6,7 +6,10 @@
 package proyectoCRUD.ui;
 
 
+import java.util.Date;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,6 +23,7 @@ import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import proyectoCRUD.SignInApplication;
+import proyectoCRUD.model.Movement;
 
 /**
  *
@@ -30,9 +34,13 @@ import proyectoCRUD.SignInApplication;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MovementControllerTest extends ApplicationTest {
     
+    
+    private TableView tbMovement;
+    
     @Override
     public void start(Stage stage) throws Exception {
         new SignInApplication().start(stage);
+        
     }
 
     @Before
@@ -53,18 +61,46 @@ public class MovementControllerTest extends ApplicationTest {
         
     }
     
-    @Test
-    //@Ignore
-    public void test2_UndoMovement() {
-       // verifyThat("#movementViewPane", isVisible());
-        verifyThat("#btUndo", isVisible());
-        clickOn("#btUndo");
-        verifyThat("#btUndo", isDisabled());
-        //verifyThat("")
+    //@Test
+    @Ignore
+    public void test2_verifyMovement() {
+        verifyThat("#tfAmount",  isVisible());
+        verifyThat("#btNewMovement", isEnabled());
+        verifyThat("#btUndo", isEnabled());
+        verifyThat("#btCancel", isEnabled());
+        verifyThat("#tbMovement", isVisible());
+        verifyThat("#tbColDate", isVisible());
+        verifyThat("#tbColAmount", isVisible());
+        verifyThat("#tbColType", isVisible());
+        verifyThat("#tbColBalance", isVisible());
+         
     }
-    @Test
+    //@Test
+    @Ignore
+    public void test3_ReadtbMovement() {
+        ObservableList<Movement> movements;
+        
+//        movements.stream().forEach().equals();         
+    }
+    /*@Test
     //@Ignore
+    public void test3_ReadMovement() {
+        verifyThat("#tfAmount",  isVisible());
+        verifyThat("#btNewMovement", isEnabled());
+        verifyThat("#btUndo", isEnabled());
+        verifyThat("#btCancel", isEnabled());
+        verifyThat("#tbMovement", isVisible());
+        verifyThat("#tbColDate", isVisible());
+        verifyThat("#tbColAmount", isVisible());
+        verifyThat("#tbColType", isVisible());
+        verifyThat("#tbColBalance", isVisible());
+        
+    }*/
+    
+    //@Test
+    @Ignore
     public void test3_NewMovement() {
+        
         clickOn("#tfAmount");
         write("250");
         clickOn("#selectType");
@@ -72,16 +108,57 @@ public class MovementControllerTest extends ApplicationTest {
         
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
+        int rowCount=tbMovement.getItems().size();
         
     }
+    
     //@Test
     @Ignore
-    public void test4_UndoAfterNewMovement() {
+    public void test4_UndoMovement() {
+        clickOn("#tfAmount");
+        write("500");
+        clickOn("#selectType");
+        clickOn("Deposit");
+        clickOn("#btNewMovement");
+        verifyThat("#btUndo", isEnabled());
+        
+        /*int rowCount=table.getItems().size();
+        assertNotEquals("La tabla no tiene contenido: no se puede hacer test.",
+                        rowCount,0);*/
+        
+        Date date=((Movement)tbMovement.getItems()
+                                     .get(tbMovement.getItems().size()-1))
+                                     .getTimestamp();
+        
+        // verifyThat("#movementViewPane", isVisible());
+        verifyThat("#btUndo", isVisible());
         clickOn("#btUndo");
         verifyThat("#btUndo", isDisabled());
+        assertEquals("El ultimo movimiento no se ha eliminado!!!",
+                    date,date);
+        
     }
+    
     @Test
     //@Ignore
+    public void test5_UndoAfterNewMovement() {
+        
+        int rowCount=tbMovement.getItems().size();
+            assertNotEquals("La tabla no tiene contenido: no se puede hacer el test.",
+                            rowCount,0);
+            
+        Date date=((Movement)tbMovement.getItems()
+                                     .get(tbMovement.getItems().size()-1))
+                                     .getTimestamp();
+        clickOn("#btUndo");
+        verifyThat("#btUndo", isDisabled());
+        
+        assertEquals("El ultimo movimiento no se ha eliminado!!!",
+                    date,date);
+    }
+    
+    //@Test
+    @Ignore
     public void test9_ExitMovement() {
         clickOn("#btCancel");
         clickOn("Aceptar");

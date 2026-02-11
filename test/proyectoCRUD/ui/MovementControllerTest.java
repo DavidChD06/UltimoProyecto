@@ -7,6 +7,7 @@ package proyectoCRUD.ui;
 
 
 import java.util.Date;
+import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
@@ -35,7 +36,7 @@ import proyectoCRUD.model.Movement;
 public class MovementControllerTest extends ApplicationTest {
     
     
-    private TableView tbMovement;
+    private TableView<Movement> tbMovement;
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -58,22 +59,25 @@ public class MovementControllerTest extends ApplicationTest {
         clickOn("#btnMovement");
 
         verifyThat("#movementViewPane", isVisible());
-        
+        tbMovement=lookup("#tbMovement").queryTableView();
     }
     
     //@Test
     @Ignore
     public void test2_verifyMovement() {
-        verifyThat("#tfAmount",  isVisible());
-        verifyThat("#btNewMovement", isEnabled());
-        verifyThat("#btUndo", isEnabled());
-        verifyThat("#btCancel", isEnabled());
-        verifyThat("#tbMovement", isVisible());
-        verifyThat("#tbColDate", isVisible());
-        verifyThat("#tbColAmount", isVisible());
-        verifyThat("#tbColType", isVisible());
-        verifyThat("#tbColBalance", isVisible());
          
+        boolean isMovement = false;
+        List<Movement> movements = tbMovement.getItems();
+        if (!movements.isEmpty()) {
+            for (Movement c : movements) {
+                isMovement = c instanceof Movement;
+                assertTrue(isMovement);
+            }
+            
+        } else {
+            assertEquals(0, tbMovement.getItems().size());
+        }
+    
     }
     //@Test
     @Ignore

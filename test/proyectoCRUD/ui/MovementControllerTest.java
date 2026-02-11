@@ -61,10 +61,23 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#movementViewPane", isVisible());
         tbMovement=lookup("#tbMovement").queryTableView();
     }
-    
     //@Test
     @Ignore
-    public void test2_verifyMovement() {
+    public void test2_verifyIsMovement() {
+        verifyThat("#tfAmount",  isVisible());
+        verifyThat("#btNewMovement", isEnabled());
+        verifyThat("#btUndo", isEnabled());
+        verifyThat("#btCancel", isEnabled());
+        verifyThat("#tbMovement", isVisible());
+        verifyThat("#tbColDate", isVisible());
+        verifyThat("#tbColAmount", isVisible());
+        verifyThat("#tbColType", isVisible());
+        verifyThat("#tbColBalance", isVisible());
+        
+    }
+    //@Test
+    @Ignore
+    public void test3_verifyMovement() {
          
         boolean isMovement = false;
         List<Movement> movements = tbMovement.getItems();
@@ -79,28 +92,6 @@ public class MovementControllerTest extends ApplicationTest {
         }
     
     }
-    //@Test
-    @Ignore
-    public void test3_ReadtbMovement() {
-        ObservableList<Movement> movements;
-        
-//        movements.stream().forEach().equals();         
-    }
-    /*@Test
-    //@Ignore
-    public void test3_ReadMovement() {
-        verifyThat("#tfAmount",  isVisible());
-        verifyThat("#btNewMovement", isEnabled());
-        verifyThat("#btUndo", isEnabled());
-        verifyThat("#btCancel", isEnabled());
-        verifyThat("#tbMovement", isVisible());
-        verifyThat("#tbColDate", isVisible());
-        verifyThat("#tbColAmount", isVisible());
-        verifyThat("#tbColType", isVisible());
-        verifyThat("#tbColBalance", isVisible());
-        
-    }*/
-    
     //@Test
     @Ignore
     public void test3_NewMovement() {

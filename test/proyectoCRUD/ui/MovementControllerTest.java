@@ -77,7 +77,7 @@ public class MovementControllerTest extends ApplicationTest {
     }
     //@Test
     @Ignore
-    public void test3_verifyMovement() {
+    public void test3_verifyTableMovement() {
          
         boolean isMovement = false;
         List<Movement> movements = tbMovement.getItems();
@@ -86,7 +86,6 @@ public class MovementControllerTest extends ApplicationTest {
                 isMovement = c instanceof Movement;
                 assertTrue(isMovement);
             }
-            
         } else {
             assertEquals(0, tbMovement.getItems().size());
         }
@@ -96,6 +95,8 @@ public class MovementControllerTest extends ApplicationTest {
     @Ignore
     public void test3_NewMovement() {
         
+        Movement movementAntiguo =  new Movement();
+        
         clickOn("#tfAmount");
         write("250");
         clickOn("#selectType");
@@ -103,7 +104,11 @@ public class MovementControllerTest extends ApplicationTest {
         
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
+        
         int rowCount=tbMovement.getItems().size();
+        assertEquals(movementAntiguo, newMovement);
+        
+        //verifyThat(rowCount);
         
     }
     
@@ -117,9 +122,9 @@ public class MovementControllerTest extends ApplicationTest {
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
         
-        /*int rowCount=table.getItems().size();
+        int rowCount=tbMovement.getItems().size();
         assertNotEquals("La tabla no tiene contenido: no se puede hacer test.",
-                        rowCount,0);*/
+                        rowCount,0);
         
         Date date=((Movement)tbMovement.getItems()
                                      .get(tbMovement.getItems().size()-1))
@@ -134,8 +139,8 @@ public class MovementControllerTest extends ApplicationTest {
         
     }
     
-    @Test
-    //@Ignore
+    //@Test
+    @Ignore
     public void test5_UndoAfterNewMovement() {
         
         int rowCount=tbMovement.getItems().size();

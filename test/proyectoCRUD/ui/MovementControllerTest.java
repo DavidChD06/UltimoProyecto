@@ -96,19 +96,29 @@ public class MovementControllerTest extends ApplicationTest {
     public void test3_NewMovement() {
         
         Movement movementAntiguo =  new Movement();
+        int rowCountOld = tbMovement.getItems().size();
+        
+        Double amount = 250.0;
+        String type = "Deposit";
         
         clickOn("#tfAmount");
-        write("250");
+        write(amount.toString());
         clickOn("#selectType");
-        clickOn("Deposit");
+        clickOn(type);
         
         clickOn("#btNewMovement");
+        
+        int rowCountNew = tbMovement.getItems().size();
+        
+        assertEquals(rowCountOld + 1, rowCountNew);
+        
+        Movement lastMovement = tbMovement.getItems().get(rowCountNew - 1);
+        
+        assertEquals(amount, lastMovement.getAmount());
+        assertEquals(type, lastMovement.getDescription().toString());
+        
         verifyThat("#btUndo", isEnabled());
         
-        int rowCount=tbMovement.getItems().size();
-        assertEquals(movementAntiguo, newMovement);
-        
-        //verifyThat(rowCount);
         
     }
     

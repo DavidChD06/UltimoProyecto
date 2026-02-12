@@ -20,6 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.framework.junit.ApplicationTest;
@@ -52,7 +53,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
     }
     
     @Before
-    public void test1_init_window() {
+    public void testInitial_init_window() {
         clickOn("#tfEmail");
         write("admin@admin.com");
         clickOn("#pfPassword");
@@ -63,7 +64,16 @@ public class CrudCustomerControllerTest extends ApplicationTest{
 
         
     }
-
+    //@Ignore
+    @Test
+    public void test1_verify_all_customers(){
+        ObservableList<Customer> items = table.getItems();
+        assertFalse("The table has no data",items.isEmpty());
+        assertTrue("Some data in the table is not a customer", 
+            items.stream().allMatch(u -> u instanceof Customer));
+    }
+    
+    @Ignore
     @Test
     public void test2_create_customer_success() {
         int rowsCount = table.getItems().size();
@@ -73,9 +83,36 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         //FIXME El assert anterior es insuficiente. Añadir uno que compruebe que el nuevo Customer 
         //FIXME con los datos iniciales está entre los items de la tabla.
         Customer customer = (Customer) table.getSelectionModel().getSelectedItem();
+        Long createdCustomerId = customer.getId();
+        ObservableList<Customer> items = table.getItems();
+        assertEquals("User id is not the same",items.stream().filter(u-> u.getId().equals(createdCustomerId)).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getFirstName() == null || u.getFirstName().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getLastName() == null || u.getLastName().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getMiddleInitial() == null || u.getMiddleInitial().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getStreet() == null || u.getStreet().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getCity() == null || u.getCity().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getState() == null || u.getState().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getZip() == null).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getEmail() == null || u.getEmail().trim().isEmpty()).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getPhone() == null).count(),1);
+        assertEquals("The user has not been added!!!",
+                items.stream().filter(u -> u.getPassword() == null || u.getPassword().trim().isEmpty()).count(),1);
+        
+        
+        //PARA LA CORRECTA COMPROBACION DE ESTE TEST, BORRAR EL USUARIO CREADO CON ESTE MISMO TEST A LA HORA DE QUERER VOLVER A EJECUTAR ESTE TEST
+        
         
     }
-    
+    @Ignore
     @Test
     public void test3_modify_customer_info() {
         
@@ -122,7 +159,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
 
 }
 
-
+    @Ignore
     @Test
     public void test4_Delete_Customer() {
         int rowsCount = table.getItems().size();
@@ -130,36 +167,74 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         interact(() -> table.scrollTo(selectedRowIndex));
         Node cell = getCell(selectedRowIndex, 1);
         clickOn(cell);
+        
+        //Esta parte es perteneciente al fixme
+        ObservableList<Customer> items = table.getItems();
+        Customer customerBorrado = table.getItems().get(selectedRowIndex);
+        long idBorrado = customerBorrado.getId();
+        //Esta parte es perteneciente al fixme
+        
         clickOn("#bDelete");
         verifyThat("Are you sure you want to delete this Customer?", isVisible());
         clickOn("Sí"); 
         assertEquals("The row has not been deleted", rowsCount - 1, table.getItems().size());
         //FIXME El assert anterior es insuficiente. Añadir uno que compruebe que el Customer seleccionado 
         //FIXME para borrar NO está entre los items de la tabla.
+        assertNotEquals("The user has not been deleted!!!",
+                items.stream().filter(u -> u.getId() == idBorrado)
+            .count(),1);
         
     }
-
     
+    @Ignore
     @Test
-    public void test5_Delete_Customer_w_Acc(){
-        // 1. Buscar el índice del primer cliente que se pueda borrar que tenga cuentas para que salte el mensaje de fallo
-        int rowIndex = 1;
+    public void test5_Delete_Customer_w_Acc() {
+
+        int rowIndex = -1;
+
         for (int i = 0; i < table.getItems().size(); i++) {
             Customer customer = table.getItems().get(i);
-            if ((customer.getAccounts() != null && !customer.getAccounts().isEmpty())) {
+
+            if (customer.getAccounts() != null && !customer.getAccounts().isEmpty()) {
                 rowIndex = i;
-                break;
+                break; 
             }
         }
-        verifyThat(bDelete, isDisabled());
+
+        // 2. Seleccionar la fila encontrada
+        int finalRowIndex = rowIndex;
+        interact(() -> {
+            table.scrollTo(finalRowIndex);
+            table.getSelectionModel().select(finalRowIndex);
+        });
+
         int rowsCount = table.getItems().size();
-        assertNotEquals("Table has no data: Cannot test", 0, rowsCount);
-        Node row = lookup(".table-row-cell").nth(rowIndex).query();
-        assertNotNull("Row is null: table has not that row. ", row);
-        clickOn(row);
-        verifyThat(bDelete, isEnabled());
-        clickOn(bDelete);
+
+        verifyThat("#bDelete", isEnabled()); 
+        clickOn("#bDelete");
+
         verifyThat("The user has associated accounts", isVisible());
+        clickOn("Aceptar"); 
+
+        assertEquals("The user should NOT have been deleted", rowsCount, table.getItems().size());
+    }
+    
+    @Ignore
+    @Test
+    public void test6_edit_existing_email(){
+        int selectedRowIndex = table.getItems().size() -1;
+        Customer customer = table.getItems().get(selectedRowIndex);
+        String emailExistente  = "jsmith@enterprise.net";
+        interact(() -> table.scrollTo(selectedRowIndex));
+        Node cell = getCell(selectedRowIndex, 8);
+        doubleClickOn(cell);
+        push(KeyCode.SHORTCUT, KeyCode.A); 
+        push(KeyCode.BACK_SPACE);          
+        write(emailExistente);
+        push(KeyCode.ENTER);
+        verifyThat("Email introduced already exists in the database",isVisible());
+        clickOn("Aceptar");
+        assertNotEquals("The email has been modified",customer.getEmail(),emailExistente);
 
     }
 

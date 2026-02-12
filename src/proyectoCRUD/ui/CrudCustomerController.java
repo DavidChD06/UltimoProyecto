@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.LongStringConverter;
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.AccountRESTClient;
@@ -384,6 +385,12 @@ public class CrudCustomerController {
                     //5)
                     tbCustomers.refresh();
                 }  
+                catch (InternalServerErrorException e){
+                    item.setEmail(oldValue);
+                    tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,"Email introduced already exists in the database").showAndWait();
+                    LOGGER.info("Email introduced already exists in the database");
+                }
                 catch(Exception e){
                     item.setEmail(oldValue);
                     LOGGER.info(e.getMessage());

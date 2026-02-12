@@ -176,7 +176,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         
         clickOn("#bDelete");
         verifyThat("Are you sure you want to delete this Customer?", isVisible());
-        clickOn("Sí"); 
+        push(KeyCode.ENTER); 
         assertEquals("The row has not been deleted", rowsCount - 1, table.getItems().size());
         //FIXME El assert anterior es insuficiente. Añadir uno que compruebe que el Customer seleccionado 
         //FIXME para borrar NO está entre los items de la tabla.
@@ -214,7 +214,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         clickOn("#bDelete");
 
         verifyThat("The user has associated accounts", isVisible());
-        clickOn("Aceptar"); 
+        push(KeyCode.ENTER); 
 
         assertEquals("The user should NOT have been deleted", rowsCount, table.getItems().size());
     }
@@ -233,7 +233,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         write(emailExistente);
         push(KeyCode.ENTER);
         verifyThat("Email introduced already exists in the database",isVisible());
-        clickOn("Aceptar");
+        push(KeyCode.ENTER);
         assertNotEquals("The email has been modified",customer.getEmail(),emailExistente);
 
     }

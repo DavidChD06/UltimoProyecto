@@ -62,8 +62,8 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#movementViewPane", isVisible());
         tbMovement=lookup("#tbMovement").queryTableView();
     }
-    @Test
-    //@Ignore
+    //@Test
+    @Ignore
     public void test2_verifyIsMovement() {
         verifyThat("#tfAmount",  isVisible());
         verifyThat("#btNewMovement", isEnabled());
@@ -76,8 +76,8 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#tbColBalance", isVisible());
         
     }
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void test3_ReadMovement() {
          
         boolean isMovement = false;

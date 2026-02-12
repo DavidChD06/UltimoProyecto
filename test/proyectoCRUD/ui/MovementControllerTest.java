@@ -11,6 +11,7 @@ import java.util.List;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -48,7 +49,7 @@ public class MovementControllerTest extends ApplicationTest {
     public void test1_SignIn() {
         
         clickOn("#tfEmail").write("jsmith@enterprise.net");
-        clickOn("#pfPassword").write("Asd4Asd");
+        clickOn("#pfPassword").write("abcd*1234");
         clickOn("#btnLogin");
         
         clickOn("Aceptar");
@@ -61,8 +62,8 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#movementViewPane", isVisible());
         tbMovement=lookup("#tbMovement").queryTableView();
     }
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void test2_verifyIsMovement() {
         verifyThat("#tfAmount",  isVisible());
         verifyThat("#btNewMovement", isEnabled());
@@ -77,49 +78,70 @@ public class MovementControllerTest extends ApplicationTest {
     }
     //@Test
     @Ignore
-    public void test3_verifyTableMovement() {
+    public void test3_ReadMovement() {
          
         boolean isMovement = false;
         List<Movement> movements = tbMovement.getItems();
-        if (!movements.isEmpty()) {
             for (Movement c : movements) {
                 isMovement = c instanceof Movement;
                 assertTrue(isMovement);
             }
-        } else {
-            assertEquals(0, tbMovement.getItems().size());
-        }
+        
     
     }
     //@Test
     @Ignore
-    public void test3_NewMovement() {
-        
-        Movement movementAntiguo =  new Movement();
+    public void test3_NewDepositMovement() {
+        /**
+         * Probando movimiento de tipo "Deposit"
+         */
         int rowCountOld = tbMovement.getItems().size();
         
-        Double amount = 250.0;
+        Double amount = 251.0;
         String type = "Deposit";
+        String type2 = "Deposit";
         
         clickOn("#tfAmount");
         write(amount.toString());
         clickOn("#selectType");
-        clickOn(type);
+        //Selecion de Deposit en el comboBox
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
         
         clickOn("#btNewMovement");
         
+        
         int rowCountNew = tbMovement.getItems().size();
-        
         assertEquals(rowCountOld + 1, rowCountNew);
-        
         Movement lastMovement = tbMovement.getItems().get(rowCountNew - 1);
         
         assertEquals(amount, lastMovement.getAmount());
         assertEquals(type, lastMovement.getDescription().toString());
-        
         verifyThat("#btUndo", isEnabled());
         
+        /**
+         * Probando el el movimiento de tipo "Payment"
+         */
         
+        int rowCountOld2 = tbMovement.getItems().size();
+        clickOn("#tfAmount");
+        write(amount.toString());
+        clickOn("#selectType");
+        //Selecion de Payment en el comboBox
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        
+        clickOn("#btNewMovement");
+        
+        int rowCountNew2 = tbMovement.getItems().size();
+        assertEquals(rowCountOld2 + 1, rowCountNew2);
+        Movement lastMovement2 = tbMovement.getItems().get(rowCountNew2 - 1);
+        
+        assertEquals(amount, lastMovement.getAmount());
+        assertEquals(type, lastMovement.getDescription().toString());
+        verifyThat("#btUndo", isEnabled());
+
     }
     
     //@Test
@@ -128,7 +150,9 @@ public class MovementControllerTest extends ApplicationTest {
         clickOn("#tfAmount");
         write("500");
         clickOn("#selectType");
-        clickOn("Deposit");
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
         

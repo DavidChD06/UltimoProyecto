@@ -176,10 +176,13 @@ public class MovementController {
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
 
             if (lastMovement == null) {
+                btUndo.setDisable(true);
                 throw new Exception("No movements to undo");
             }
             
-            String movementId = lastMovement.getId().toString();
+            Long movementId = lastMovement.getId();
+            String movementID = movementId.toString();
+            
             double amount = lastMovement.getAmount();
             String tipo = lastMovement.getDescription();
             
@@ -190,7 +193,7 @@ public class MovementController {
             }
 
             accClient.updateAccount_XML(account);
-            restClient.remove(movementId);
+            restClient.remove(movementID);
 
             //lbBalance.setText(String.format("%.2f", account.getBalance()));
             tbMovement.getItems().remove(lastMovement);
@@ -206,7 +209,46 @@ public class MovementController {
             LOGGER.severe("Unexpected error: " + e.getMessage());
         }
     }
-
+    
+/*
+    private void handlebtUndoOnAction(ActionEvent event) {
+        try{
+            Movement lastMovement = tbMovement.getItems().stream()
+                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
+            
+            String rm = (lastMovement.getId().toString());
+            
+            
+            double lastAmount = lastMovement.getAmount();
+            String tipo = lastMovement.getDescription();   
+            
+            //lbBalance.setText(account.getBalance().toString());
+            
+            if (lastMovement != null) {
+                //if(tipo == null){}
+                if("Deposit".equals(tipo)){
+                    account.setBalance(account.getBalance() + lastAmount);
+                    //lbBalance.setText(account.getBalance().toString());
+                }
+                if("Payment".equals(tipo)){
+                    account.setBalance(account.getBalance() - lastAmount);
+                    //lbBalance.setText(String.valueOf(account.getBalance()));
+                }
+                //lbBalance.setText(account.getBalance().toString());
+                tbMovement.getItems().remove(lastMovement);
+                btUndo.setDisable(true);
+               
+            }
+            accClient.updateAccount_XML(account);
+            restClient.remove(rm);
+            tbMovement.refresh();
+            
+        }
+        catch(ClientErrorException e){
+            LOGGER.info(e.getMessage());
+        }
+    }
+*/
     private void handlebtNewMovementOnAction(ActionEvent event){
         try{
             if (tfAmount.getText().isEmpty() || selectType.getValue() == null) {
@@ -257,6 +299,7 @@ public class MovementController {
             tbMovement.refresh();
             btUndo.setDisable(false);
             lbGeneralError.setText("");
+            tfAmount.setText("");
         }
         catch (NumberFormatException e) {
             lbGeneralError.setText("Invalid format: Amount must be a number");

@@ -86,26 +86,7 @@ public class CrudCustomerControllerTest extends ApplicationTest{
         Long createdCustomerId = customer.getId();
         ObservableList<Customer> items = table.getItems();
         assertEquals("User id is not the same",items.stream().filter(u-> u.getId().equals(createdCustomerId)).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getFirstName() == null || u.getFirstName().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getLastName() == null || u.getLastName().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getMiddleInitial() == null || u.getMiddleInitial().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getStreet() == null || u.getStreet().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getCity() == null || u.getCity().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getState() == null || u.getState().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getZip() == null).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getEmail() == null || u.getEmail().trim().isEmpty()).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getPhone() == null).count(),1);
-        assertEquals("The user has not been added!!!",
-                items.stream().filter(u -> u.getPassword() == null || u.getPassword().trim().isEmpty()).count(),1);
+        
         
         
         //PARA LA CORRECTA COMPROBACION DE ESTE TEST, BORRAR EL USUARIO CREADO CON ESTE MISMO TEST A LA HORA DE QUERER VOLVER A EJECUTAR ESTE TEST

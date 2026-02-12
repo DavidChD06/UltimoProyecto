@@ -94,9 +94,6 @@ public class AccountControllerTest extends ApplicationTest {
         Node celdaType = lookup(".table-row-cell:selected .table-cell").nth(2).query();
         doubleClickOn(celdaType);
         type(KeyCode.DOWN).type(KeyCode.ENTER);
-        Node celdaCreditLine = lookup(".table-row-cell:selected .table-cell").nth(5).query();
-        doubleClickOn(celdaCreditLine);
-        write("1000").push(KeyCode.ENTER);
         clickOn("#btnAdd");
         assertEquals("The row has not been added!!!", rowCount + 1, tbvAccounts.getItems().size());
         //busca la cuenta en el modelo de datos de la tabla

@@ -166,7 +166,7 @@ public class MovementControllerTest extends ApplicationTest {
         
         clickOn("#btUndo");
         verifyThat("#btUndo", isDisabled());
-        assertEquals("El ultimo movimiento no se ha eliminado!!!",
+        assertEquals("El ultimo movimiento no se ha eliminado",
                     date,date);
         
     }

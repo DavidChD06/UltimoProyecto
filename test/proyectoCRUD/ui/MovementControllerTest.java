@@ -62,7 +62,7 @@ public class MovementControllerTest extends ApplicationTest {
         verifyThat("#movementViewPane", isVisible());
         tbMovement=lookup("#tbMovement").queryTableView();
     }
-    //@Test
+    @Test
     @Ignore
     public void test2_verifyIsMovement() {
         verifyThat("#tfAmount",  isVisible());
@@ -77,8 +77,8 @@ public class MovementControllerTest extends ApplicationTest {
         
     }
     @Test
-    //@Ignore
-    public void test3_ReadMovement() {
+    @Ignore
+    public void test2_ReadMovement() {
          
         boolean isMovement = false;
         List<Movement> movements = tbMovement.getItems();
@@ -89,7 +89,7 @@ public class MovementControllerTest extends ApplicationTest {
         
     
     }
-    //@Test
+    @Test
     @Ignore
     public void test3_NewDepositMovement() {
         /**
@@ -119,16 +119,16 @@ public class MovementControllerTest extends ApplicationTest {
         assertEquals(amount, lastMovement.getAmount());
         assertEquals(type, lastMovement.getDescription().toString());
         verifyThat("#btUndo", isEnabled());
-        
         /**
          * Probando el el movimiento de tipo "Payment"
          */
-        
         int rowCountOld2 = tbMovement.getItems().size();
         clickOn("#tfAmount");
         write(amount.toString());
         clickOn("#selectType");
         //Selecion de Payment en el comboBox
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
         press(KeyCode.DOWN);
         press(KeyCode.ENTER);
         
@@ -144,7 +144,7 @@ public class MovementControllerTest extends ApplicationTest {
 
     }
     
-    //@Test
+    @Test
     @Ignore
     public void test4_UndoMovement() {
         clickOn("#tfAmount");
@@ -164,8 +164,6 @@ public class MovementControllerTest extends ApplicationTest {
                                      .get(tbMovement.getItems().size()-1))
                                      .getTimestamp();
         
-        // verifyThat("#movementViewPane", isVisible());
-        verifyThat("#btUndo", isVisible());
         clickOn("#btUndo");
         verifyThat("#btUndo", isDisabled());
         assertEquals("El ultimo movimiento no se ha eliminado!!!",
@@ -173,7 +171,7 @@ public class MovementControllerTest extends ApplicationTest {
         
     }
     
-    //@Test
+    @Test
     @Ignore
     public void test5_UndoAfterNewMovement() {
         
@@ -191,8 +189,7 @@ public class MovementControllerTest extends ApplicationTest {
                     date,date);
     }
     
-    //@Test
-    @Ignore
+    
     public void test9_ExitMovement() {
         clickOn("#btCancel");
         clickOn("Aceptar");

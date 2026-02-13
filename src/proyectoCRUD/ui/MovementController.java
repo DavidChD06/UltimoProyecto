@@ -5,7 +5,7 @@
  */
 package proyectoCRUD.ui;
 
-import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,11 +22,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.InternalServerErrorException;
@@ -35,8 +34,6 @@ import javax.ws.rs.core.GenericType;
 import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.logic.MovementRESTClient;
 import proyectoCRUD.model.Account;
-import proyectoCRUD.model.AccountType;
-import static proyectoCRUD.model.AccountType.CREDIT;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.model.Movement;
 
@@ -59,17 +56,19 @@ public class MovementController {
     @FXML
     private Label lbGeneralError;
     @FXML
+    private Label lbBalance;
+    @FXML
     private TextField tfAmount;
     @FXML
     private TableView<Movement> tbMovement;
     @FXML
     private TableColumn<Movement, Date> tbColDate;
     @FXML
-    private TableColumn<Movement, String> tbColAmount;
+    private TableColumn<Movement, Double> tbColAmount;
     @FXML
     private TableColumn<Movement, String> tbColType;
     @FXML
-    private TableColumn<Movement, String> tbColBalance;
+    private TableColumn<Movement, Double> tbColBalance;
     @FXML
     private ComboBox selectType;
     
@@ -109,12 +108,43 @@ public class MovementController {
             btCancel.setOnAction(this::handlebtCancelOnAction);
 
             tbColDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+            
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
-               
+            
+            //@TODO alinear celdas de amount y balance a la derecha
+            tbColAmount.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tbColBalance.setStyle("-fx-alignment: CENTER-RIGHT;");
+            
+            //@TODO formateo de cendas
+            tbColDate.setCellFactory(column -> new TableCell<Movement, Date>(){
+                private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                @Override
+                protected void updateItem(Date item, boolean empty){
+                    super.updateItem(item,empty);
+                    setText(empty || item == null ?  null : format.format(item));
+                }    
+            }); 
+            //@TODO colocacion del simbolo € en las columnas de dinero(amount y balance)
+            tbColAmount.setCellFactory(column -> new TableCell<Movement, Double>(){
+                @Override
+                 protected void updateItem(Double item, boolean empty){
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ?  null : String.format("%.2f €", item));
+                }
+            });
+            
+            tbColBalance.setCellFactory(column -> new TableCell<Movement, Double>(){
+                @Override
+                 protected void updateItem(Double item, boolean empty){
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ?  null : String.format("%.2f €", item.doubleValue()));
+                }
+            });
+            //labels de informacion
             lbIdAcount.setText(account.getId().toString());
-
+            lbBalance.setText(account.getBalance().toString());
             
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());

@@ -164,7 +164,7 @@ public class MovementController {
         }
     }
     
-    private void handlebtUndoOnAction(ActionEvent event) {
+     private void handlebtUndoOnAction(ActionEvent event) {
         try {
             movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {

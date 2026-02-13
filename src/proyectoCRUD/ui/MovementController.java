@@ -83,8 +83,8 @@ public class MovementController {
     private static final Logger LOGGER = Logger.getLogger("ProyectoCRUD.ui");
     
     MovementRESTClient restClient = new MovementRESTClient();
-    AccountRESTClient accClient = new AccountRESTClient();
-    
+    AccountRESTClient accClient = new AccountRESTClient();ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {},account.getId().toString()));
 
     public void init(Stage stage, Parent root) {
         try {
@@ -112,12 +112,7 @@ public class MovementController {
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
-            
-
-            ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
-                    new GenericType<List<Movement>>() {},account.getId().toString()));
-            
-                    
+               
             lbIdAcount.setText(account.getId().toString());
 
             
@@ -171,18 +166,26 @@ public class MovementController {
     
     private void handlebtUndoOnAction(ActionEvent event) {
         try {
+            movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));
+
+            tbMovement.setItems(movements);
+
             //Ultimo movimiento
-            Movement lastMovement = tbMovement.getItems().stream()
+            Movement lastMovement = movements.stream()
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
 
             if (lastMovement == null) {
+                btUndo.setDisable(true);
                 throw new Exception("No movements to undo");
             }
-            
-            String movementId = lastMovement.getId().toString();
+
+            String movementID = lastMovement.getId().toString();
+
             double amount = lastMovement.getAmount();
             String tipo = lastMovement.getDescription();
-            
+
             if ("Deposit".equals(tipo)) {
                 account.setBalance(account.getBalance() - amount);
             } else if ("Payment".equals(tipo)) {
@@ -190,14 +193,12 @@ public class MovementController {
             }
 
             accClient.updateAccount_XML(account);
-            restClient.remove(movementId);
-
-            //lbBalance.setText(String.format("%.2f", account.getBalance()));
+            restClient.remove(movementID);
             tbMovement.getItems().remove(lastMovement);
             tbMovement.refresh();
             lbGeneralError.setText("");
             btUndo.setDisable(true);
-            
+
 
         } catch (ClientErrorException e) {
             LOGGER.severe("Error undoing movement: " + e.getMessage());
@@ -207,110 +208,69 @@ public class MovementController {
         }
     }
 
-    private void handlebtNewMovementOnAction(ActionEvent event){
-        try{
+    private void handlebtNewMovementOnAction(ActionEvent event) {
+        try {
             if (tfAmount.getText().isEmpty() || selectType.getValue() == null) {
                 throw new Exception("Please fill all fields");
             }
             double balanceActual = account.getBalance();
             double lineActual = account.getCreditLine();
-            
+
             Movement movement = new Movement();
-            
+
             String tipo = (String) selectType.getValue();
             double amount = Double.parseDouble(tfAmount.getText());
-            
+
             double newBalance = balanceActual;
             double newLine = lineActual;
-            
+
             //lbBalance.setText(String.valueOf(account.getBalance()));
-           
-            if("Payment".equals(tipo)){
-                if(balanceActual + lineActual < amount){
+
+            if ("Payment".equals(tipo)) {
+                if (balanceActual + lineActual < amount) {
                     throw new Exception("You don't have enough balance");
-                } 
-                if(balanceActual >= amount){
+                }
+                if (balanceActual >= amount) {
                     newBalance = balanceActual - amount;
-                }else{
+                } else {
                     double lineNecesario = amount - balanceActual;
                     newBalance = 0.0;
                     newLine = lineActual - lineNecesario;
-                }   
+                }
             }
-            if("Deposit".equals(tipo)){
+            if ("Deposit".equals(tipo)) {
                 newBalance = balanceActual + amount;
             }
-            
+
             movement.setAmount(amount);
             movement.setDescription(tipo);
             movement.setTimestamp(new Date());
             movement.setBalance(newBalance);
-            
+
             this.account.setBalance(newBalance);
             this.account.setCreditLine(newLine);
             accClient.updateAccount_XML(this.account);
-            
+
             restClient.create_XML(movement, account.getId().toString());
             //lbBalance.setText(String.format("%.2f", newBalance));
-            
-            tbMovement.getItems().add(movement);
-            tbMovement.refresh();
+
+            movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));
+
+            tbMovement.setItems(movements);
+
             btUndo.setDisable(false);
             lbGeneralError.setText("");
-        }
-        catch (NumberFormatException e) {
+            tfAmount.setText("");
+        } catch (NumberFormatException e) {
             lbGeneralError.setText("Invalid format: Amount must be a number");
-        }
-        catch(IllegalArgumentException | ClientErrorException e){
+        } catch (IllegalArgumentException | ClientErrorException e) {
             LOGGER.info(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             lbGeneralError.setText(e.toString());
             LOGGER.severe(e.getMessage());
         }
     }
 }
-/*
 
-    private void handlebtUndoOnAction(ActionEvent event) {
-        try{
-            Movement lastMovement = tbMovement.getItems().stream()
-                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
-            
-            String rm = (lastMovement.getId().toString());
-            
-            
-            double lastAmount = lastMovement.getAmount();
-            String tipo = lastMovement.getDescription();   
-            
-            lbBalance.setText(account.getBalance().toString());
-            
-            if (lastMovement != null) {
-                //if(tipo == null){}
-                if("Deposit".equals(tipo)){
-                    account.setBalance(account.getBalance() + lastAmount);
-                    //lbBalance.setText(account.getBalance().toString());
-                }
-                if("Payment".equals(tipo)){
-                    account.setBalance(account.getBalance() - lastAmount);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                }
-                lbBalance.setText(account.getBalance().toString());
-                tbMovement.getItems().remove(lastMovement);
-                btUndo.setDisable(true);
-               
-            }
-            accClient.updateAccount_XML(account);
-            restClient.remove(rm);
-            tbMovement.refresh();
-            
-        }
-        catch(ClientErrorException e){
-            LOGGER.info(e.getMessage());
-        }
-    }
-
-
-}
-
- */

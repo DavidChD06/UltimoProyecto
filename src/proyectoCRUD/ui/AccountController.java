@@ -44,14 +44,26 @@ import proyectoCRUD.model.Customer;
  * así como la navegación hacia la vista de movimientos. Se comunica con el servidor
  * mediante {@link AccountRESTClient}.
  * * @author luis felipe
+ * @todo @fixme Hacer que la siguiente clase implemente las interfaces 
+ * Initializable y MenuActionsHandler para que al pulsar en las acciones CRUD del 
+ * menú Actions se ejecuten los métodos manejadores correspondientes a la vista 
+ * que incluye el menú.
+ * El método initialize debe llamar a setMenuActionsHandler() para establecer que este
+ * controlador es el manejador de acciones del menú.* 
  */
 public class AccountController {
 
     @FXML
     private HBox menuAccount;
+    /**
+     * TODO: NO TOCAR La siguiente referencia debe llamarse así y tener este tipo.
+     * JavaFX asigna automáticamente el campo menuIncludeController cuando usas fx:id="menuInclude".
+     */
     @FXML
-    private MenuController menuAccountController;
-    ;
+    private MenuController menuIncludeController;
+    
+    //@FXML
+    //private MenuController menuAccountController;
     @FXML
     private Button btnRefresh, btnDelete, btnMovement, btnExit;
     @FXML

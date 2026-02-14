@@ -15,10 +15,10 @@
             <fx:include fx:id="menuAccount" source="Menu.fxml" />
           <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="363.0" prefWidth="708.0">
             <columns>
-                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="232.0" text="DATE" />
-              <TableColumn fx:id="tbColAmount" prefWidth="188.0" text="AMOUNT" />
-                <TableColumn fx:id="tbColType" prefWidth="148.0" text="TYPE" />
-              <TableColumn fx:id="tbColBalance" prefWidth="150.0" text="BALANCE" />
+                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="188.0" text="DATE" />
+              <TableColumn fx:id="tbColAmount" prefWidth="184.0" text="AMOUNT" />
+                <TableColumn fx:id="tbColType" prefWidth="152.0" text="TYPE" />
+              <TableColumn fx:id="tbColBalance" prefWidth="194.0" text="BALANCE" />
             </columns>
           </TableView>
           <Button fx:id="btNewMovement" layoutX="808.0" layoutY="301.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="New movement">

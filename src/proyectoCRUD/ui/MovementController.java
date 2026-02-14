@@ -82,12 +82,15 @@ public class MovementController {
     private static final Logger LOGGER = Logger.getLogger("ProyectoCRUD.ui");
     
     MovementRESTClient restClient = new MovementRESTClient();
-    AccountRESTClient accClient = new AccountRESTClient();ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
-                    new GenericType<List<Movement>>() {},account.getId().toString()));
+    AccountRESTClient accClient = new AccountRESTClient();
+    
+    ObservableList<Movement> movements ;
 
     public void init(Stage stage, Parent root) {
         try {
-            
+                movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));        
             Scene scene = new Scene(root);
             //movementStage.initModality(Modality.APPLICATION_MODAL);
             movementStage.setScene(scene);
@@ -139,13 +142,13 @@ public class MovementController {
                 @Override
                  protected void updateItem(Double item, boolean empty){
                     super.updateItem(item, empty);
-                    setText(empty || item == null ?  null : String.format("%.2f €", item.doubleValue()));
+                    setText(empty || item == null ?  null : String.format("%.2f €", item));
                 }
             });
             //labels de informacion
             lbIdAcount.setText(account.getId().toString());
             lbBalance.setText(account.getBalance().toString());
-            
+           
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
             

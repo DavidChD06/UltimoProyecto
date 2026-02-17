@@ -229,6 +229,7 @@ public class MovementController {
             restClient.remove(movementID);
             tbMovement.getItems().remove(lastMovement);
             tbMovement.refresh();
+            lbBalance.setText(account.getBalance().toString());
             lbGeneralError.setText("");
             btUndo.setDisable(true);
 
@@ -292,10 +293,15 @@ public class MovementController {
                     }, account.getId().toString()));
 
             tbMovement.setItems(movements);
-
+            
             btUndo.setDisable(false);
+            
+            lbBalance.setText(account.getBalance().toString());
+            lbBalance.setText(String.valueOf(newBalance));
+            
             lbGeneralError.setText("");
             tfAmount.setText("");
+            
         } catch (NumberFormatException e) {
             lbGeneralError.setText("Invalid format: Amount must be a number");
         } catch (IllegalArgumentException | ClientErrorException e) {

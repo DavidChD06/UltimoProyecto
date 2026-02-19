@@ -12,14 +12,14 @@
 <Pane fx:id="movementViewPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="576.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.MovementController">
        <children>
         <!--FIXME: NO TOCAR la siguiente modificación necesaria: fx:id deber tener el valor "menuInclude" -->
-        <fx:include source="Menu.fxml" fx:id="menuInclude"/>
+        <fx:include fx:id="menuInclude" source="Menu.fxml" />
             <!--fx:include fx:id="menuAccount" source="Menu.fxml" /-->
           <TableView fx:id="tbMovement" layoutX="62.0" layoutY="143.0" prefHeight="363.0" prefWidth="708.0">
             <columns>
-                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="232.0" text="DATE" />
-              <TableColumn fx:id="tbColAmount" prefWidth="188.0" text="AMOUNT" />
-                <TableColumn fx:id="tbColType" prefWidth="148.0" text="TYPE" />
-              <TableColumn fx:id="tbColBalance" prefWidth="150.0" text="BALANCE" />
+                <TableColumn fx:id="tbColDate" minWidth="0.0" prefWidth="176.0" text="DATE" />
+              <TableColumn fx:id="tbColAmount" prefWidth="169.0" text="AMOUNT" />
+                <TableColumn fx:id="tbColType" prefWidth="177.0" text="TYPE" />
+              <TableColumn fx:id="tbColBalance" prefWidth="185.0" text="BALANCE" />
             </columns>
           </TableView>
           <Button fx:id="btNewMovement" layoutX="808.0" layoutY="301.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="169.0" text="New movement">
@@ -64,6 +64,16 @@
       <Label fx:id="lbGeneralError" layoutX="62.0" layoutY="530.0" prefHeight="15.0" prefWidth="708.0" textFill="RED">
          <font>
             <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="445.0" layoutY="72.0" prefHeight="25.0" prefWidth="75.0" text="Balance:" wrapText="true">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbBalance" layoutX="520.0" layoutY="72.0" prefHeight="25.0" prefWidth="236.0">
+         <font>
+            <Font size="16.0" />
          </font>
       </Label>
        </children>

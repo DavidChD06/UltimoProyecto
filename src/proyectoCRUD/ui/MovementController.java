@@ -6,9 +6,12 @@
 package proyectoCRUD.ui;
 
 import java.io.IOException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,6 +27,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -50,14 +55,16 @@ import proyectoCRUD.model.Movement;
  * El método initialize debe llamar a setMenuActionsHandler() para establecer que este
  * controlador es el manejador de acciones del menú.
  */
-public class MovementController {
+public class MovementController implements MenuActionsHandler, Initializable {
     /**
      * TODO: NO TOCAR La siguiente referencia debe llamarse así y tener este tipo.
      * JavaFX asigna automáticamente el campo menuIncludeController cuando usas fx:id="menuInclude".
      */
     @FXML
     private MenuController menuIncludeController;
-
+    
+    
+    
     @FXML
     private Button btNewMovement;
     @FXML
@@ -71,17 +78,19 @@ public class MovementController {
     @FXML
     private Label lbGeneralError;
     @FXML
+    private Label lbBalance;
+    @FXML
     private TextField tfAmount;
     @FXML
     private TableView<Movement> tbMovement;
     @FXML
     private TableColumn<Movement, Date> tbColDate;
     @FXML
-    private TableColumn<Movement, String> tbColAmount;
+    private TableColumn<Movement, Double> tbColAmount;
     @FXML
     private TableColumn<Movement, String> tbColType;
     @FXML
-    private TableColumn<Movement, String> tbColBalance;
+    private TableColumn<Movement, Double> tbColBalance;
     @FXML
     private ComboBox selectType;
     
@@ -96,11 +105,14 @@ public class MovementController {
     
     MovementRESTClient restClient = new MovementRESTClient();
     AccountRESTClient accClient = new AccountRESTClient();
+    ObservableList<Movement> movements ;
     
-
+    
     public void init(Stage stage, Parent root) {
         try {
-            
+                movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));        
             Scene scene = new Scene(root);
             //movementStage.initModality(Modality.APPLICATION_MODAL);
             movementStage.setScene(scene);
@@ -121,17 +133,44 @@ public class MovementController {
             btCancel.setOnAction(this::handlebtCancelOnAction);
 
             tbColDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+            
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
             
-
-            ObservableList<Movement> movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
-                    new GenericType<List<Movement>>() {},account.getId().toString()));
+            //alinear celdas de amount y balance a la derecha
+            tbColAmount.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tbColBalance.setStyle("-fx-alignment: CENTER-RIGHT;");
             
-                    
+            //formateo de cendas
+            tbColDate.setCellFactory(column -> new TableCell<Movement, Date>(){
+                private final SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                @Override
+                protected void updateItem(Date item, boolean empty){
+                    super.updateItem(item,empty);
+                    setText(empty || item == null ?  null : format.format(item));
+                }    
+            }); 
+            //colocacion del simbolo € en las columnas de dinero(amount y balance)
+            tbColAmount.setCellFactory(column -> new TableCell<Movement, Double>(){
+                @Override
+                 protected void updateItem(Double item, boolean empty){
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ?  null : String.format("%.2f €", item));
+                }
+            });
+            
+            tbColBalance.setCellFactory(column -> new TableCell<Movement, Double>(){
+                @Override
+                 protected void updateItem(Double item, boolean empty){
+                    super.updateItem(item, empty);
+                    setText(empty || item == null ?  null : String.format("%.2f €", item));
+                }
+            });
+            //labels de informacion
             lbIdAcount.setText(account.getId().toString());
-
+            lbBalance.setText(account.getBalance().toString());
+            selectType.getSelectionModel().selectFirst();
             
             tbMovement.setItems(movements);
             LOGGER.info(movements.toString());
@@ -181,20 +220,28 @@ public class MovementController {
         }
     }
     
-    private void handlebtUndoOnAction(ActionEvent event) {
+     private void handlebtUndoOnAction(ActionEvent event) {
         try {
+            movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));
+
+            tbMovement.setItems(movements);
+
             //Ultimo movimiento
-            Movement lastMovement = tbMovement.getItems().stream()
+            Movement lastMovement = movements.stream()
                     .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
 
             if (lastMovement == null) {
+                btUndo.setDisable(true);
                 throw new Exception("No movements to undo");
             }
-            
-            String movementId = lastMovement.getId().toString();
+
+            String movementID = lastMovement.getId().toString();
+
             double amount = lastMovement.getAmount();
             String tipo = lastMovement.getDescription();
-            
+
             if ("Deposit".equals(tipo)) {
                 account.setBalance(account.getBalance() - amount);
             } else if ("Payment".equals(tipo)) {
@@ -202,14 +249,13 @@ public class MovementController {
             }
 
             accClient.updateAccount_XML(account);
-            restClient.remove(movementId);
-
-            //lbBalance.setText(String.format("%.2f", account.getBalance()));
+            restClient.remove(movementID);
             tbMovement.getItems().remove(lastMovement);
             tbMovement.refresh();
+            lbBalance.setText(account.getBalance().toString());
             lbGeneralError.setText("");
             btUndo.setDisable(true);
-            
+
 
         } catch (ClientErrorException e) {
             LOGGER.severe("Error undoing movement: " + e.getMessage());
@@ -219,110 +265,105 @@ public class MovementController {
         }
     }
 
-    private void handlebtNewMovementOnAction(ActionEvent event){
-        try{
+    private void handlebtNewMovementOnAction(ActionEvent event) {
+        try {
             if (tfAmount.getText().isEmpty() || selectType.getValue() == null) {
                 throw new Exception("Please fill all fields");
             }
             double balanceActual = account.getBalance();
             double lineActual = account.getCreditLine();
-            
+
             Movement movement = new Movement();
-            
+
             String tipo = (String) selectType.getValue();
             double amount = Double.parseDouble(tfAmount.getText());
-            
+
             double newBalance = balanceActual;
             double newLine = lineActual;
-            
-            //lbBalance.setText(String.valueOf(account.getBalance()));
-           
-            if("Payment".equals(tipo)){
-                if(balanceActual + lineActual < amount){
+
+            lbBalance.setText(String.valueOf(account.getBalance()));
+
+            if ("Payment".equals(tipo)) {
+                if (balanceActual + lineActual < amount) {
                     throw new Exception("You don't have enough balance");
-                } 
-                if(balanceActual >= amount){
+                }
+                if (balanceActual >= amount) {
                     newBalance = balanceActual - amount;
-                }else{
+                } else {
                     double lineNecesario = amount - balanceActual;
                     newBalance = 0.0;
                     newLine = lineActual - lineNecesario;
-                }   
+                }
             }
-            if("Deposit".equals(tipo)){
+            if ("Deposit".equals(tipo)) {
                 newBalance = balanceActual + amount;
             }
-            
+
             movement.setAmount(amount);
             movement.setDescription(tipo);
             movement.setTimestamp(new Date());
             movement.setBalance(newBalance);
-            
+
             this.account.setBalance(newBalance);
             this.account.setCreditLine(newLine);
             accClient.updateAccount_XML(this.account);
-            
+
             restClient.create_XML(movement, account.getId().toString());
-            //lbBalance.setText(String.format("%.2f", newBalance));
+            lbBalance.setText(String.format("%.2f", newBalance));
+
+            movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {
+                    }, account.getId().toString()));
+
+            tbMovement.setItems(movements);
             
-            tbMovement.getItems().add(movement);
-            tbMovement.refresh();
             btUndo.setDisable(false);
+            
+            lbBalance.setText(account.getBalance().toString());
+            lbBalance.setText(String.valueOf(newBalance));
+            
             lbGeneralError.setText("");
-        }
-        catch (NumberFormatException e) {
+            tfAmount.setText("");
+            
+        } catch (NumberFormatException e) {
             lbGeneralError.setText("Invalid format: Amount must be a number");
-        }
-        catch(IllegalArgumentException | ClientErrorException e){
+        } catch (IllegalArgumentException | ClientErrorException e) {
             LOGGER.info(e.getMessage());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             lbGeneralError.setText(e.toString());
             LOGGER.severe(e.getMessage());
         }
     }
-}
-/*
-
-    private void handlebtUndoOnAction(ActionEvent event) {
-        try{
-            Movement lastMovement = tbMovement.getItems().stream()
-                    .max(Comparator.comparing(Movement::getTimestamp)).orElse(null);
-            
-            String rm = (lastMovement.getId().toString());
-            
-            
-            double lastAmount = lastMovement.getAmount();
-            String tipo = lastMovement.getDescription();   
-            
-            lbBalance.setText(account.getBalance().toString());
-            
-            if (lastMovement != null) {
-                //if(tipo == null){}
-                if("Deposit".equals(tipo)){
-                    account.setBalance(account.getBalance() + lastAmount);
-                    //lbBalance.setText(account.getBalance().toString());
-                }
-                if("Payment".equals(tipo)){
-                    account.setBalance(account.getBalance() - lastAmount);
-                    //lbBalance.setText(String.valueOf(account.getBalance()));
-                }
-                lbBalance.setText(account.getBalance().toString());
-                tbMovement.getItems().remove(lastMovement);
-                btUndo.setDisable(true);
-               
-            }
-            accClient.updateAccount_XML(account);
-            restClient.remove(rm);
-            tbMovement.refresh();
-            
-        }
-        catch(ClientErrorException e){
-            LOGGER.info(e.getMessage());
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (menuIncludeController != null) {
+            menuIncludeController.setMenuActionsHandler(this);
         }
     }
+    @Override
+    public void onCreate() {
+        handlebtNewMovementOnAction(new ActionEvent());
+    }
 
+    @Override
+    public void onRefresh() {
+        movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
+                    new GenericType<List<Movement>>() {}, account.getId().toString()));
+        tbMovement.setItems(movements);
+        //new Alert(AlertType.INFORMATION, "It's not necessary to do anything, the table does it automatically").showAndWait();
+    }
 
+    @Override
+    public void onUpdate() {
+        new Alert(AlertType.INFORMATION, "It's not necessary to do anything,"+
+                "/nthe table does it automatically").showAndWait();
+        
+    }
+
+    @Override
+    public void onDelete() {
+        handlebtUndoOnAction(new ActionEvent());
+    }
+    
 }
-
- */

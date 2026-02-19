@@ -192,7 +192,7 @@ public class AccountController {
             //Mostrar la ventana
             stage.show();
 
-            //Cerrar la ventana
+            //Cerrar la ventana con la X
             stage.setOnCloseRequest(this::handleExitOnAction);
 
 

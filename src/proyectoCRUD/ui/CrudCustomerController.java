@@ -36,6 +36,9 @@ import proyectoCRUD.logic.CustomerRESTClient;
 import proyectoCRUD.model.Account;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.ui.MenuController;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
 
 /**
  * Controller class for the Customer CRUD view.
@@ -49,7 +52,7 @@ import proyectoCRUD.ui.MenuController;
  * El método initialize debe llamar a setMenuActionsHandler() para establecer que este
  * controlador es el manejador de acciones del menú.* 
  */
-public class CrudCustomerController {
+public class CrudCustomerController implements Initializable, MenuActionsHandler {
     
 
     @FXML private Window menuCustomer;
@@ -107,6 +110,41 @@ public class CrudCustomerController {
      * @param stage The stage where the scene will be displayed.
      * @param root  The root node of the FXML hierarchy.
      */
+    
+    //IMPLEMENTACION DE LA INTERFAZ INITIALIZE PARA EL MENU REUTILIZABLE (TODO)
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Establecemos este controlador como el manejador de las acciones del menú
+        if (menuIncludeController != null) {
+            menuIncludeController.setMenuActionsHandler(this);
+        }
+    }
+    
+    //METODOS DEL MENU PARA LAS ACCIONES CRUD (TODO)
+    @Override
+    public void onCreate() {
+        handleBtAddOnAction(new ActionEvent());
+    }
+
+    @Override
+    public void onRefresh() {
+        handleBtRefreshOnAction(new ActionEvent());
+    }
+
+    @Override
+    public void onUpdate() {
+        new Alert(Alert.AlertType.INFORMATION, "Double click on any cell to start editing").showAndWait();
+    }
+
+    @Override
+    public void onDelete() {
+
+        if (tbCustomers.getSelectionModel().getSelectedItem() != null) {
+            handleBtDeleteOnAction(new ActionEvent());
+        } else {
+            new Alert(Alert.AlertType.INFORMATION, "Please select a customer to delete first").showAndWait();
+        }
+    }
     
     public void init(Stage stage, Parent root) {
         //Creating logger
@@ -372,7 +410,7 @@ public class CrudCustomerController {
                 
         });
     
-        //Field email handler
+                //Field email handler
         tbEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         tbEmail.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbEmail.setEditable(true);
@@ -396,6 +434,12 @@ public class CrudCustomerController {
                     //5)
                     tbCustomers.refresh();
                 }  
+                catch (InternalServerErrorException e){
+                    item.setEmail(oldValue);
+                    tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,"Email introduced already exists in the database").showAndWait();
+                    LOGGER.info("Email introduced already exists in the database");
+                }
                 catch(Exception e){
                     item.setEmail(oldValue);
                     LOGGER.info(e.getMessage());
@@ -620,6 +664,8 @@ public class CrudCustomerController {
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList(customerList);
         
         tbCustomers.setItems(allCustomers);
+        
+        tbCustomers.refresh();
     }
         
 }

@@ -5,10 +5,12 @@
  */
 package proyectoCRUD.ui;
 
+import java.net.URL;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -39,29 +42,31 @@ import proyectoCRUD.model.AccountType;
 import proyectoCRUD.model.Customer;
 
 /**
- * Controlador de la interfaz gráfica para la gestión de Cuentas Bancarias (Account.fxml).
- * Esta clase maneja la lógica de visualización, creación, edición y borrado de cuentas,
- * así como la navegación hacia la vista de movimientos. Se comunica con el servidor
- * mediante {@link AccountRESTClient}.
+ * Controlador de la interfaz gráfica para la gestión de Cuentas Bancarias
+ * (Account.fxml). Esta clase maneja la lógica de visualización, creación,
+ * edición y borrado de cuentas, así como la navegación hacia la vista de
+ * movimientos. Se comunica con el servidor mediante {@link AccountRESTClient}.
+ *
  * * @author luis felipe
- * @todo @fixme Hacer que la siguiente clase implemente las interfaces 
- * Initializable y MenuActionsHandler para que al pulsar en las acciones CRUD del 
- * menú Actions se ejecuten los métodos manejadores correspondientes a la vista 
- * que incluye el menú.
- * El método initialize debe llamar a setMenuActionsHandler() para establecer que este
- * controlador es el manejador de acciones del menú.* 
+ * @todo @fixme Hacer que la siguiente clase implemente las interfaces
+ * Initializable y MenuActionsHandler para que al pulsar en las acciones CRUD
+ * del menú Actions se ejecuten los métodos manejadores correspondientes a la
+ * vista que incluye el menú. El método initialize debe llamar a
+ * setMenuActionsHandler() para establecer que este controlador es el manejador
+ * de acciones del menú.*
  */
-public class AccountController {
+public class AccountController implements Initializable, MenuActionsHandler {
 
     @FXML
     private HBox menuAccount;
     /**
-     * TODO: NO TOCAR La siguiente referencia debe llamarse así y tener este tipo.
-     * JavaFX asigna automáticamente el campo menuIncludeController cuando usas fx:id="menuInclude".
+     * TODO: NO TOCAR La siguiente referencia debe llamarse así y tener este
+     * tipo. JavaFX asigna automáticamente el campo menuIncludeController cuando
+     * usas fx:id="menuInclude".
      */
     @FXML
     private MenuController menuIncludeController;
-    
+
     //@FXML
     //private MenuController menuAccountController;
     @FXML
@@ -87,10 +92,19 @@ public class AccountController {
     private AccountRESTClient client = new AccountRESTClient();
     private Account newAccounts;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if (menuIncludeController != null) {
+            menuIncludeController.setMenuActionsHandler(this);
+        }
+    }
+
     /**
      * Inicializa la etapa principal de la ventana de Gestión de Cuentas.
      * Configura la escena, título, propiedades de las columnas (CellFactories),
-     * manejadores de eventos de edición y carga los datos iniciales del cliente.
+     * manejadores de eventos de edición y carga los datos iniciales del
+     * cliente.
+     *
      * @param stage La etapa (Stage) principal de esta ventana.
      * @param root El nodo raíz del diseño FXML cargado.
      */
@@ -103,7 +117,13 @@ public class AccountController {
             //Se establecen las propiedades de la vetana.
             stage.setScene(scene);
             this.stage = stage;
+            if (menuIncludeController != null) {
+
+                menuIncludeController.setStage(this.stage);
+
+            }
             //Establecer el titulo de la ventana
+            stage.setTitle("Account");
             //La ventana no es redimensionable
             stage.setResizable(false);
             //El botón Delete está deshabilitado.
@@ -207,7 +227,6 @@ public class AccountController {
             //Cerrar la ventana
             stage.setOnCloseRequest(this::handleExitOnAction);
 
-
         } catch (Exception e) {
             handleAlert("Error al obtener los datos");
         }
@@ -215,8 +234,10 @@ public class AccountController {
     }
 
     /**
-     * Recibe el objeto Cliente desde el controlador anterior (SignIn).
-     * Este método es necesario para cargar los datos específicos del usuario logueado.
+     * Recibe el objeto Cliente desde el controlador anterior (SignIn). Este
+     * método es necesario para cargar los datos específicos del usuario
+     * logueado.
+     *
      * @param customer El objeto Customer autenticado.
      */
     public void setCustomer(Customer customer) {
@@ -225,7 +246,9 @@ public class AccountController {
 
     /**
      * Maneja el evento de confirmación de edición en la columna Descripción.
-     * Valida que el texto no esté vacío y actualiza el servidor si es una cuenta existente.
+     * Valida que el texto no esté vacío y actualiza el servidor si es una
+     * cuenta existente.
+     *
      * @param event Evento de edición de celda.
      */
     private void handleDescription(TableColumn.CellEditEvent<Account, String> event) {
@@ -252,9 +275,10 @@ public class AccountController {
         }
     }
 
-     /**
-     * Maneja el evento de cambio de Tipo de Cuenta (Standard/Credit).
-     * Ajusta la visibilidad o edición de la línea de crédito según el tipo seleccionado.
+    /**
+     * Maneja el evento de cambio de Tipo de Cuenta (Standard/Credit). Ajusta la
+     * visibilidad o edición de la línea de crédito según el tipo seleccionado.
+     *
      * @param event Evento de edición de celda.
      */
     private void handleType(TableColumn.CellEditEvent<Account, AccountType> event) {
@@ -284,8 +308,9 @@ public class AccountController {
     }
 
     /**
-     * Maneja la edición de la Línea de Crédito.
-     * Valida que el valor no sea negativo y que la cuenta sea de tipo Crédito.
+     * Maneja la edición de la Línea de Crédito. Valida que el valor no sea
+     * negativo y que la cuenta sea de tipo Crédito.
+     *
      * @param event Evento de edición de celda.
      */
     private void handleCreditLine(TableColumn.CellEditEvent<Account, Double> event) {
@@ -319,8 +344,9 @@ public class AccountController {
     }
 
     /**
-     * Maneja la edición del Balance Inicial.
-     * Sincroniza el balance inicial con el balance actual.
+     * Maneja la edición del Balance Inicial. Sincroniza el balance inicial con
+     * el balance actual.
+     *
      * @param event Evento de edición de celda.
      */
     private void handleBeginBalance(TableColumn.CellEditEvent<Account, Double> event) {
@@ -349,9 +375,10 @@ public class AccountController {
     }
 
     /**
-     * Listener para la selección de filas en la tabla.
-     * Habilita o deshabilita botones según si hay una fila seleccionada.
-     * Se bloquea si estamos en modo creación para evitar perder el foco.
+     * Listener para la selección de filas en la tabla. Habilita o deshabilita
+     * botones según si hay una fila seleccionada. Se bloquea si estamos en modo
+     * creación para evitar perder el foco.
+     *
      * @param observable Objeto observable.
      * @param oldValue Valor anterior.
      * @param newValue Nueva fila seleccionada.
@@ -372,8 +399,9 @@ public class AccountController {
     }
 
     /**
-     * Manejador del botón "AddAccount" (ToggleButton).
-     * Alterna entre iniciar el proceso de creación y confirmar el guardado.
+     * Manejador del botón "AddAccount" (ToggleButton). Alterna entre iniciar el
+     * proceso de creación y confirmar el guardado.
+     *
      * * @param event Evento del botón.
      */
     private void handleCreate(ActionEvent event) {
@@ -393,12 +421,12 @@ public class AccountController {
     }
 
     /**
-     * Lógica interna para preparar una nueva cuenta en la tabla.
-     * Genera un ID aleatorio, inserta una fila vacía y cambia el estado de la UI
-     * (Botón Add -> Save, Botón Delete -> Cancel).
+     * Lógica interna para preparar una nueva cuenta en la tabla. Genera un ID
+     * aleatorio, inserta una fila vacía y cambia el estado de la UI (Botón Add
+     * -> Save, Botón Delete -> Cancel).
      */
     private void createNewAccount() {
-Account account = new Account();
+        Account account = new Account();
         long numero;
         boolean existe;
 
@@ -415,29 +443,25 @@ Account account = new Account();
             existe = tbvAccounts.getItems().stream()
                     .anyMatch(a -> a.getId() != null && a.getId().equals(finalNumero));
 
-        } while (existe); 
+        } while (existe);
 
- 
         account.setId(numero);
         Set<Customer> customers = new HashSet<>();
         customers.add(customer);
         account.setCustomers(customers);
-        
- 
+
         tbvAccounts.getItems().add(account);
         tbvAccounts.getSelectionModel().clearSelection();
         tbvAccounts.getSelectionModel().select(account);
         tbvAccounts.scrollTo(account);
-        
+
         account.setBeginBalanceTimestamp(new Date());
         account.setType(AccountType.STANDARD);
         account.setBalance(0.0);
         account.setCreditLine(0.0);
-        
 
         newAccounts = account;
-        tbvAccounts.setEditable(true); 
-
+        tbvAccounts.setEditable(true);
 
         btnAdd.setText("Save");
         btnDelete.setText("Cancel");
@@ -463,10 +487,9 @@ Account account = new Account();
                 if (newAccounts.getType() == AccountType.CREDIT
                         && newAccounts.getCreditLine() == null) {
                     handleAlert("Credit line is required for credit accounts");
-                    btnAdd.setSelected(true); 
+                    btnAdd.setSelected(true);
                     return;
                 }
-
 
                 try {
                     client.createAccount_XML(newAccounts);
@@ -477,7 +500,7 @@ Account account = new Account();
 
                 } catch (Exception e) {
                     handleAlert("Error creating account");
-                    btnAdd.setSelected(true); 
+                    btnAdd.setSelected(true);
                     return;
                 }
             }
@@ -485,14 +508,14 @@ Account account = new Account();
             LOGGER.info(e.getMessage());
         }
 
-        
         newAccounts = null;
         tbvAccounts.refresh();
     }
 
     /**
-     * Recarga los datos de la tabla desde el servidor.
-     * Útil para sincronizar cambios realizados por otros usuarios.
+     * Recarga los datos de la tabla desde el servidor. Útil para sincronizar
+     * cambios realizados por otros usuarios.
+     *
      * @param event Evento del botón Refresh.
      */
     private void handleRefresh(ActionEvent event) {
@@ -507,9 +530,10 @@ Account account = new Account();
     }
 
     /**
-     * Manejador dual para el botón Delete/Cancel.
-     * Si estamos en modo creación, funciona como CANCELAR (elimina la fila temporal).
-     * Si estamos en modo normal, funciona como BORRAR (elimina la cuenta de la BD).
+     * Manejador dual para el botón Delete/Cancel. Si estamos en modo creación,
+     * funciona como CANCELAR (elimina la fila temporal). Si estamos en modo
+     * normal, funciona como BORRAR (elimina la cuenta de la BD).
+     *
      * @param event Evento del botón.
      */
     private void handleDelete(ActionEvent event) {
@@ -561,7 +585,9 @@ Account account = new Account();
     }
 
     /**
-     * Navega a la ventana de Movimientos (Movement.fxml) para la cuenta seleccionada.
+     * Navega a la ventana de Movimientos (Movement.fxml) para la cuenta
+     * seleccionada.
+     *
      * @param event Evento del botón Movements.
      */
     private void handleMovementOnAction(ActionEvent event) {
@@ -588,8 +614,9 @@ Account account = new Account();
     }
 
     /**
-     * Gestiona la salida de la ventana actual hacia la pantalla de Login (SignIn).
-     * Solicita confirmación antes de salir.
+     * Gestiona la salida de la ventana actual hacia la pantalla de Login
+     * (SignIn). Solicita confirmación antes de salir.
+     *
      * @param event Evento de salida (Botón Exit o cerrar ventana).
      */
     private void handleExitOnAction(Event event) {
@@ -615,6 +642,7 @@ Account account = new Account();
 
     /**
      * Muestra una alerta de error al usuario.
+     *
      * @param mensaje Mensaje descriptivo del error.
      */
     private void handleAlert(String mensaje) {
@@ -625,6 +653,7 @@ Account account = new Account();
 
     /**
      * Muestra un cuadro de diálogo de confirmación.
+     *
      * @param mensaje Pregunta a realizar al usuario.
      * @return true si el usuario pulsa OK, false en caso contrario.
      */
@@ -640,6 +669,26 @@ Account account = new Account();
 
         // Retorna true solo si el usuario presionó el botón OK
         return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    @Override
+    public void onCreate() {
+        btnAdd.fire();
+    }
+
+    @Override
+    public void onRefresh() {
+        btnRefresh.fire();
+    }
+
+    @Override
+    public void onUpdate() {
+        handleAlert("The update is done automatically \nwhen you edit the table.");
+    }
+
+    @Override
+    public void onDelete() {
+        btnDelete.fire();
     }
 
 }

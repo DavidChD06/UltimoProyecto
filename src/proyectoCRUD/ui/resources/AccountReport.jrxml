@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4e636cf-9326-4d04-bc31-fb3399f18101">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="id" class="java.lang.Long"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="type" class="java.lang.Object"/>
+	<field name="beginBalance" class="java.lang.Double"/>
+	<field name="balance" class="java.lang.Double"/>
+	<field name="creditLine" class="java.lang.Double"/>
+	<field name="beginBalanceTimestamp" class="java.util.Date"/>
+	<variable name="totalBalance" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="totalAccounts" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{id}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="153" y="0" width="468" height="59" uuid="2f496c21-d434-4de7-8720-73a5634b630f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="24"/>
+				</textElement>
+				<text><![CDATA[ACCOUNT REPORT]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="38" splitType="Stretch">
+			<staticText>
+				<reportElement x="133" y="0" width="488" height="25" uuid="470e200e-b7aa-417d-b613-5bea248cf530"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16"/>
+				</textElement>
+				<text><![CDATA[Report for all Account in the current DB]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="37" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="0" width="51" height="20" uuid="4e33495a-f45f-48aa-814b-3bf0645bbc5c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="52" y="0" width="131" height="20" uuid="0c566d60-8a6c-42b8-b124-df38461ff42f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="183" y="0" width="110" height="20" uuid="13145234-9220-4118-a02c-0b6461b8cb8c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TYPE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="0" width="148" height="20" uuid="a80ee346-945a-4616-9664-bfb6198c3e46"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BEGIN BALANCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="0" width="118" height="20" uuid="7bd77193-e1e0-4b9d-897e-46ce07d21d65"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BALANCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="559" y="0" width="132" height="20" uuid="cd307827-6759-42fb-bf8b-b5280ffed09a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CREDIT LINE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="691" y="0" width="111" height="20" uuid="a29f62cc-386f-4cbf-b1cc-49276114a81d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="0" width="51" height="20" uuid="11111111-1111-1111-1111-111111111111"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="0" width="131" height="20" uuid="22222222-2222-2222-2222-222222222222"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="183" y="0" width="110" height="20" uuid="33333333-3333-3333-3333-333333333333"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $F{type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="293" y="0" width="148" height="20" uuid="44444444-4444-4444-4444-444444444444"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{beginBalance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="441" y="0" width="118" height="20" uuid="55555555-5555-5555-5555-555555555555"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="559" y="0" width="132" height="20" uuid="66666666-6666-6666-6666-666666666666"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{creditLine} == null ? 0.0 : $F{creditLine}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="691" y="0" width="111" height="20" uuid="77777777-7777-7777-7777-777777777777"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{beginBalanceTimestamp}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="24" width="801" height="1" uuid="fd0faafe-ee69-48e9-bd43-c6a10cc8b051"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="45" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy h:mm a">
+				<reportElement x="1" y="5" width="182" height="20" uuid="88888888-8888-8888-8888-888888888888"/>
+				<textElement>
+					<font fontName="Arial" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="682" y="5" width="80" height="20" uuid="99999999-9999-9999-9999-999999999999"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="762" y="5" width="40" height="20" uuid="aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="12" width="130" height="20" uuid="cccccccc-cccc-cccc-cccc-cccccccccccc"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL ACCOUNTS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="12" width="100" height="20" uuid="dddddddd-dddd-dddd-dddd-dddddddddddd"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalAccounts}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="441" y="12" width="150" height="20" uuid="eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL BALANCE:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00 €">
+				<reportElement x="595" y="12" width="150" height="20" uuid="ffffffff-ffff-ffff-ffff-ffffffffffff"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalBalance}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

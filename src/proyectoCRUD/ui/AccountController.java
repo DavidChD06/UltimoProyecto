@@ -6,9 +6,13 @@
 package proyectoCRUD.ui;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -26,8 +30,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -36,6 +42,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.model.Account;
 import proyectoCRUD.model.AccountType;
@@ -70,7 +82,7 @@ public class AccountController implements Initializable, MenuActionsHandler {
     //@FXML
     //private MenuController menuAccountController;
     @FXML
-    private Button btnRefresh, btnDelete, btnMovement, btnExit;
+    private Button btnRefresh, btnDelete, btnMovement, btnExit, btnReport;
     @FXML
     private ToggleButton btnAdd;
     @FXML
@@ -137,16 +149,39 @@ public class AccountController implements Initializable, MenuActionsHandler {
 
             tcDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
             tcDescription.setCellFactory(param -> new TextFieldTableCell<Account, String>(new javafx.util.converter.DefaultStringConverter()) {
+
                 @Override
+
                 public void startEdit() {
+
                     Account account = getTableView().getItems().get(getIndex());
 
                     if (newAccounts != null && account != newAccounts) {
+
                         return;
+
                     }
 
                     super.startEdit();
+
+                    TextField textField = (TextField) getGraphic();
+
+                    if (textField != null) {
+
+                        textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+
+                            if (!isNowFocused) {
+
+                                commitEdit(textField.getText());
+
+                            }
+
+                        });
+
+                    }
+
                 }
+
             });
             tcDescription.setEditable(true);
             tcDescription.setOnEditCommit(this::handleDescription);
@@ -167,47 +202,206 @@ public class AccountController implements Initializable, MenuActionsHandler {
             tcType.setOnEditCommit(this::handleType);
 
             tcBeginBalance.setCellValueFactory(new PropertyValueFactory<>("beginBalance"));
-            tcBeginBalance.setCellFactory(param -> new TextFieldTableCell<Account, Double>(new DoubleStringConverter()) {
+            tcBeginBalance.setCellFactory(param
+                    -> new TextFieldTableCell<Account, Double>(new DoubleStringConverter()) {
+
                 @Override
+
+                public void updateItem(Double item, boolean empty
+                ) {
+
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+
+                        setText(null);
+
+                    } else {
+
+                        setText(String.format("%.2f €", item));
+
+                    }
+
+                }
+
+                @Override
+
                 public void startEdit() {
+
                     Account account = getTableView().getItems().get(getIndex());
 
                     if (account != newAccounts) {
+
                         return;
+
                     }
+
                     super.startEdit();
+
+                    TextField textField = (TextField) getGraphic();
+
+                    if (textField != null) {
+
+                        textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+
+                            if (!isNowFocused) {
+
+                                try {
+
+                                    //Controlamos las comas o los puntos 
+                                    String text = textField.getText().replace(",", ".");
+
+                                    Double val = Double.valueOf(text);
+
+                                    // Si el formato introducido es válido, guardamos 
+                                    commitEdit(val);
+
+                                } catch (NumberFormatException e) {
+
+                                    // Si se escribe letras, no se guarda 
+                                    cancelEdit();
+
+                                }
+
+                            }
+
+                        });
+
+                    }
+
                 }
+
             });
             tcBeginBalance.setEditable(true);
             tcBeginBalance.setOnEditCommit(this::handleBeginBalance);
 
             tcBalance.setCellValueFactory(
                     new PropertyValueFactory<>("balance"));
+            tcBalance.setCellFactory(column
+                    -> new TableCell<Account, Double>() {
+
+                @Override
+
+                protected void updateItem(Double item, boolean empty
+                ) {
+
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+
+                        setText(null);
+
+                    } else {
+
+                        setText(String.format("%.2f €", item));
+
+                    }
+
+                }
+
+            }
+            );
             tcBalance.setEditable(false);
 
             tcCreditLine.setCellValueFactory(new PropertyValueFactory<>("creditLine"));
-            tcCreditLine.setCellFactory(param -> new TextFieldTableCell<Account, Double>(new DoubleStringConverter()) {
+            tcCreditLine.setCellFactory(param
+                    -> new TextFieldTableCell<Account, Double>(new DoubleStringConverter()) {
+
                 @Override
+
+                public void updateItem(Double item, boolean empty
+                ) {
+
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+
+                        setText(null);
+
+                    } else {
+
+                        setText(String.format("%.2f €", item));
+
+                    }
+
+                }
+
+                @Override
+
                 public void startEdit() {
+
                     Account account = getTableView().getItems().get(getIndex());
 
                     if (newAccounts != null && account != newAccounts) {
+
                         return;
+
                     }
 
                     if (account.getType() != AccountType.CREDIT) {
+
                         return;
+
                     }
 
                     super.startEdit();
+
+                    TextField textField = (TextField) getGraphic();
+
+                    if (textField != null) {
+
+                        textField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+
+                            if (!isNowFocused) {
+
+                                try {
+
+                                    String text = textField.getText().replace(",", ".");
+
+                                    Double val = Double.valueOf(text);
+
+                                    commitEdit(val);
+
+                                } catch (NumberFormatException e) {
+
+                                    cancelEdit();
+
+                                }
+
+                            }
+
+                        });
+
+                    }
+
                 }
+
             });
             tcCreditLine.setEditable(true);
             tcCreditLine.setOnEditCommit(this::handleCreditLine);
 
             tcBeginBalanceTimestamp.setCellValueFactory(
                     new PropertyValueFactory<>("beginBalanceTimestamp"));
+            tcBeginBalanceTimestamp.setCellFactory(column -> new TableCell<Account, Date>() {
+
+                private final SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+                @Override
+
+                protected void updateItem(Date item, boolean empty) {
+
+                    super.updateItem(item, empty);
+
+                    setText(empty || item == null ? null : format.format(item));
+
+                }
+
+            });
             tcBeginBalanceTimestamp.setEditable(false);
+            //Centrado de los datos
+            tcBeginBalance.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tcBalance.setStyle("-fx-alignment: CENTER-RIGHT;");
+            tcCreditLine.setStyle("-fx-alignment: CENTER-RIGHT;");
             //Manejadores de los botones
             btnMovement.setOnAction(this::handleMovementOnAction);
             btnDelete.setOnAction(this::handleDelete);
@@ -215,6 +409,7 @@ public class AccountController implements Initializable, MenuActionsHandler {
             tbvAccounts.getSelectionModel().selectedItemProperty().addListener(this::handleAccountTable);
             btnAdd.setOnAction(this::handleCreate);
             btnExit.setOnAction(this::handleExitOnAction);
+            btnReport.setOnAction(this::handleReportOnAction);
             //Carga de datos en la tabla
             tbvAccounts.setItems(FXCollections.observableArrayList(
                     client.findAccountsByCustomerId_XML(new GenericType<List<Account>>() {
@@ -638,6 +833,32 @@ public class AccountController implements Initializable, MenuActionsHandler {
             handleAlert("Error, when going to registry!");
         }
         event.consume();
+    }
+
+    private void handleReportOnAction(ActionEvent event) {
+        try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report
+                    = JasperCompileManager.compileReport(getClass()
+                            .getResourceAsStream("/proyectoCRUD/ui/resources/AccountReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems
+                    = new JRBeanCollectionDataSource((Collection<Account>) this.tbvAccounts.getItems());
+            //Map of parameter to be passed to the report
+            Map<String, Object> parameters = new HashMap<>();
+            //Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (Exception e) {
+            //handleAlert("Erro, when charge teh data");
+            e.printStackTrace(); 
+            handleAlert("Error al generar el informe: " + e.getMessage());
+        }
     }
 
     /**

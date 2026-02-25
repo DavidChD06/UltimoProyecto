@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="141d1d80-4006-49e3-9ec1-ac36317be770">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="timestamp" class="java.util.Date"/>
+	<field name="amount" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="balance" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="75" splitType="Stretch">
+			<staticText>
+				<reportElement x="171" y="22" width="206" height="30" uuid="d1c00ef1-cb93-42c5-8499-e2a4f8391b4e"/>
+				<textElement>
+					<font size="22"/>
+				</textElement>
+				<text><![CDATA[Movement Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="13" width="100" height="20" uuid="6c3173ae-0f06-4499-b0a7-1feaa3e05856"/>
+				<text><![CDATA[ACCOUNT]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="17f452c2-778d-4cc1-8ff1-ded47ec9c6fb"/>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="149" y="0" width="100" height="20" uuid="fa671a35-74fa-4f2e-898a-707a7d9d8b08"/>
+				<text><![CDATA[AMOUNT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="0" width="100" height="20" uuid="6ab493b8-bfa6-4539-bd95-5dfdd8fcbff6"/>
+				<text><![CDATA[BALANCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="0" width="100" height="20" uuid="109cf73b-ea03-4885-8496-41944779d6f3"/>
+				<text><![CDATA[TYPE]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="5d4175e3-de01-4bd1-9c52-ad57670ba4ea"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="9ae248bb-21c9-47cd-a065-9e2be6a9cfc4"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="98ae44be-2b3d-43a0-b273-9f9f0da4559e"/>
+				<textFieldExpression><![CDATA[$F{timestamp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="149" y="0" width="100" height="20" uuid="9d8afe4c-b1b3-4db1-8b8b-439335169426"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="307" y="0" width="100" height="20" uuid="32414ff8-7a7f-4f2b-9d97-689bef40c650"/>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="a39af288-1b53-497d-b1a8-49624c74f3da"/>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="acd0d9e7-c156-4f92-80e9-f6b7a567d4d1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Prevent">
+			<textField>
+				<reportElement x="0" y="34" width="100" height="20" uuid="e586e973-dcf5-481c-9dc1-89e55f9b1847"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date();]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -8,9 +8,12 @@ package proyectoCRUD.ui;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -37,6 +40,13 @@ import javafx.stage.Stage;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.core.GenericType;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 import proyectoCRUD.logic.AccountRESTClient;
 import proyectoCRUD.logic.MovementRESTClient;
 import proyectoCRUD.model.Account;
@@ -71,6 +81,8 @@ public class MovementController implements MenuActionsHandler, Initializable {
     private Button btUndo;
     @FXML
     private Button btCancel;
+    @FXML
+    private Button btInforme;
     @FXML
     private Label lbIdAcount;
     @FXML
@@ -131,9 +143,9 @@ public class MovementController implements MenuActionsHandler, Initializable {
             btNewMovement.setOnAction(this::handlebtNewMovementOnAction);
             btUndo.setOnAction(this::handlebtUndoOnAction);
             btCancel.setOnAction(this::handlebtCancelOnAction);
-
-            tbColDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
+            btInforme.setOnAction(this::handlebtInformeOnAction);
             
+            tbColDate.setCellValueFactory(new PropertyValueFactory<>("timestamp"));
             tbColAmount.setCellValueFactory(new PropertyValueFactory<>("amount"));
             tbColType.setCellValueFactory(new PropertyValueFactory<>("description"));
             tbColBalance.setCellValueFactory(new PropertyValueFactory<>("balance"));
@@ -332,6 +344,27 @@ public class MovementController implements MenuActionsHandler, Initializable {
         } catch (Exception e) {
             lbGeneralError.setText(e.toString());
             LOGGER.severe(e.getMessage());
+        }
+    }
+    private void handlebtInformeOnAction(ActionEvent event){
+       try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report=
+                JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/proyectoCRUD/ui/resources/movementReport.jrxml"));
+            JRBeanCollectionDataSource dataItems=
+                    new JRBeanCollectionDataSource((Collection<Movement>)this.tbMovement.getItems());
+            Map<String,Object> parameters=new HashMap<>();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (JRException ex) {
+            //If there is an error show message and
+            //log it.
+            //showErrorAlert("Error al imprimir:\n"+
+             //               ex.getMessage());
+            LOGGER.info(ex.getMessage());
         }
     }
     

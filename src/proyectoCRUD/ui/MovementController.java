@@ -355,6 +355,9 @@ public class MovementController implements MenuActionsHandler, Initializable {
             JRBeanCollectionDataSource dataItems=
                     new JRBeanCollectionDataSource((Collection<Movement>)this.tbMovement.getItems());
             Map<String,Object> parameters=new HashMap<>();
+            
+            parameters.put("accountId", account.getId());
+            
             JasperPrint jasperPrint = JasperFillManager.fillReport(report,parameters,dataItems);
             JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
             jasperViewer.setVisible(true);
@@ -384,14 +387,13 @@ public class MovementController implements MenuActionsHandler, Initializable {
         movements = FXCollections.observableArrayList(restClient.findMovementByAccount_XML(
                     new GenericType<List<Movement>>() {}, account.getId().toString()));
         tbMovement.setItems(movements);
-        //new Alert(AlertType.INFORMATION, "It's not necessary to do anything, the table does it automatically").showAndWait();
+        
     }
 
     @Override
     public void onUpdate() {
         new Alert(AlertType.INFORMATION, "It's not necessary to do anything,"+
                 "/nthe table does it automatically").showAndWait();
-        
     }
 
     @Override

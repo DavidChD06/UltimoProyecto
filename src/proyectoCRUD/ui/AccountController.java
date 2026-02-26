@@ -5,6 +5,7 @@
  */
 package proyectoCRUD.ui;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -847,6 +848,10 @@ public class AccountController implements Initializable, MenuActionsHandler {
                     = new JRBeanCollectionDataSource((Collection<Account>) this.tbvAccounts.getItems());
             //Map of parameter to be passed to the report
             Map<String, Object> parameters = new HashMap<>();
+            parameters.put("CUSTOMER_NAME", customer.getFirstName() + " " + customer.getLastName());
+            // Cargar el logo desde la carpeta resources
+            InputStream logoStream = getClass().getResourceAsStream("/proyectoCRUD/ui/resources/Logo.png");
+            parameters.put("LOGO_APP", logoStream);
             //Fill report with data
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
             //Create and show the report window. The second parameter false value makes 
@@ -856,7 +861,7 @@ public class AccountController implements Initializable, MenuActionsHandler {
             // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (Exception e) {
             //handleAlert("Erro, when charge teh data");
-            e.printStackTrace(); 
+            e.printStackTrace();
             handleAlert("Error al generar el informe: " + e.getMessage());
         }
     }

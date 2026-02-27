@@ -102,6 +102,8 @@ public class MovementController {
         try {
             
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/proyectoCRUD/ui/resources/Styles.css").toExternalForm());
+            stage.setScene(scene);
             //movementStage.initModality(Modality.APPLICATION_MODAL);
             movementStage.setScene(scene);
             movementStage.setTitle("Movements");

@@ -127,6 +127,8 @@ public class AccountController implements Initializable, MenuActionsHandler {
             LOGGER.info("Initializing window");
             //Asociamos la escena a la primera ventana.
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/proyectoCRUD/ui/resources/Styles.css").toExternalForm());
+            stage.setScene(scene);
             //Se establecen las propiedades de la vetana.
             stage.setScene(scene);
             this.stage = stage;

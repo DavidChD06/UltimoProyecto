@@ -5,6 +5,7 @@
  */
 package proyectoCRUD.ui;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -36,18 +37,43 @@ import proyectoCRUD.logic.CustomerRESTClient;
 import proyectoCRUD.model.Account;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.ui.MenuController;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * Controller class for the Customer CRUD view.
  * Handles the interaction between the UI and the logic layer for managing Customers.
  *
  * @author david
+ * @todo @fixme Hacer que la siguiente clase implemente las interfaces 
+ * Initializable y MenuActionsHandler para que al pulsar en las acciones CRUD del 
+ * menú Actions se ejecuten los métodos manejadores correspondientes a la vista 
+ * que incluye el menú.
+ * El método initialize debe llamar a setMenuActionsHandler() para establecer que este
+ * controlador es el manejador de acciones del menú.* 
  */
-public class CrudCustomerController {
+public class CrudCustomerController implements Initializable, MenuActionsHandler {
     
 
     @FXML private Window menuCustomer;
-    @FXML private MenuController menuController;
+    /**
+     * TODO: NO TOCAR La siguiente referencia debe llamarse así y tener este tipo.
+     * JavaFX asigna automáticamente el campo menuIncludeController cuando usas fx:id="menuInclude".
+     */
+    @FXML
+    private MenuController menuIncludeController;
+    //@FXML private MenuController menuController;
     
     @FXML
     private TableColumn tbID;
@@ -81,6 +107,8 @@ public class CrudCustomerController {
     private Button bDelete;
     @FXML
     private Button bRefresh;
+    @FXML
+    private Button bPrint;
     
     private final Stage CustomerStage = new Stage();
     private Scene scene;
@@ -95,6 +123,41 @@ public class CrudCustomerController {
      * @param stage The stage where the scene will be displayed.
      * @param root  The root node of the FXML hierarchy.
      */
+    
+    //IMPLEMENTACION DE LA INTERFAZ INITIALIZE PARA EL MENU REUTILIZABLE (TODO)
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Establecemos este controlador como el manejador de las acciones del menú
+        if (menuIncludeController != null) {
+            menuIncludeController.setMenuActionsHandler(this);
+        }
+    }
+    
+    //METODOS DEL MENU PARA LAS ACCIONES CRUD (TODO)
+    @Override
+    public void onCreate() {
+        handleBtAddOnAction(new ActionEvent());
+    }
+
+    @Override
+    public void onRefresh() {
+        handleBtRefreshOnAction(new ActionEvent());
+    }
+
+    @Override
+    public void onUpdate() {
+        new Alert(Alert.AlertType.INFORMATION, "Double click on any cell to start editing").showAndWait();
+    }
+
+    @Override
+    public void onDelete() {
+
+        if (tbCustomers.getSelectionModel().getSelectedItem() != null) {
+            handleBtDeleteOnAction(new ActionEvent());
+        } else {
+            new Alert(Alert.AlertType.INFORMATION, "Please select a customer to delete first").showAndWait();
+        }
+    }
     
     public void init(Stage stage, Parent root) {
         //Creating logger
@@ -118,6 +181,7 @@ public class CrudCustomerController {
         bDelete.setOnAction(this::handleBtDeleteOnAction);
         bRefresh.setOnAction(this::handleBtRefreshOnAction);
         bAdd.setOnAction(this::handleBtAddOnAction);
+        bPrint.setOnAction(this::handleBtPrintOnAction);
         
         CustomerStage.setOnCloseRequest(this::handleBtExitOnAction);
         tbCustomers.getSelectionModel().selectedItemProperty().addListener(this::handleCustomerTableSelectionChanged);
@@ -360,7 +424,7 @@ public class CrudCustomerController {
                 
         });
     
-        //Field email handler
+                //Field email handler
         tbEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         tbEmail.setCellFactory(TextFieldTableCell.<Customer>forTableColumn());
         tbEmail.setEditable(true);
@@ -384,6 +448,12 @@ public class CrudCustomerController {
                     //5)
                     tbCustomers.refresh();
                 }  
+                catch (InternalServerErrorException e){
+                    item.setEmail(oldValue);
+                    tbCustomers.refresh();
+                    new Alert(Alert.AlertType.INFORMATION,"Email introduced already exists in the database").showAndWait();
+                    LOGGER.info("Email introduced already exists in the database");
+                }
                 catch(Exception e){
                     item.setEmail(oldValue);
                     LOGGER.info(e.getMessage());
@@ -596,6 +666,38 @@ public class CrudCustomerController {
             new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
+    private void handleBtPrintOnAction(Event event){
+        try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report=
+                JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/proyectoCRUD/ui/resources/CustomerReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems=
+                    new JRBeanCollectionDataSource((Collection<Customer>)this.tbCustomers.getItems());
+            //Map of parameter to be passed to the report
+            // Cargar la imagen del logo como InputStream
+            InputStream logoStream = getClass().getResourceAsStream("/proyectoCRUD/ui/resources/Logo.png");
+
+            // Map of parameter to be passed to the report
+            Map<String,Object> parameters = new HashMap<>();
+            // Inyectamos el logo en los parámetros
+            parameters.put("logoFMD", logoStream); 
+
+            // Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (JRException ex) {
+            LOGGER.info(ex.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,"Error while creating report for customers!").showAndWait();
+        }
+    }
+    
     /**
      * Fetches all customers from the server using the REST client and updates the TableView items.
      */
@@ -608,6 +710,8 @@ public class CrudCustomerController {
         ObservableList<Customer> allCustomers = FXCollections.observableArrayList(customerList);
         
         tbCustomers.setItems(allCustomers);
+        
+        tbCustomers.refresh();
     }
         
 }

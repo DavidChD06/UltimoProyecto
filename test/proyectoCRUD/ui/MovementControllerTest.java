@@ -6,7 +6,13 @@
 package proyectoCRUD.ui;
 
 
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,6 +26,7 @@ import static org.testfx.matcher.base.NodeMatchers.isDisabled;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import proyectoCRUD.SignInApplication;
+import proyectoCRUD.model.Movement;
 
 /**
  *
@@ -30,16 +37,20 @@ import proyectoCRUD.SignInApplication;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MovementControllerTest extends ApplicationTest {
     
+    
+    private TableView<Movement> tbMovement;
+    
     @Override
     public void start(Stage stage) throws Exception {
         new SignInApplication().start(stage);
+        
     }
 
     @Before
     public void test1_SignIn() {
         
         clickOn("#tfEmail").write("jsmith@enterprise.net");
-        clickOn("#pfPassword").write("Asd4Asd");
+        clickOn("#pfPassword").write("abcd*1234");
         clickOn("#btnLogin");
         
         clickOn("Aceptar");
@@ -50,40 +61,128 @@ public class MovementControllerTest extends ApplicationTest {
         clickOn("#btnMovement");
 
         verifyThat("#movementViewPane", isVisible());
+        tbMovement=lookup("#tbMovement").queryTableView();
+    }
+    @Test
+    @Ignore
+    public void test2_verifyIsMovement() {
+        verifyThat("#tfAmount",  isVisible());
+        verifyThat("#btNewMovement", isEnabled());
+        verifyThat("#btUndo", isEnabled());
+        verifyThat("#btCancel", isEnabled());
+        verifyThat("#tbMovement", isVisible());
+        verifyThat("#tbColDate", isVisible());
+        verifyThat("#tbColAmount", isVisible());
+        verifyThat("#tbColType", isVisible());
+        verifyThat("#tbColBalance", isVisible());
+        
+    }
+    @Test
+    @Ignore
+    public void test2_ReadMovement() {
+         
+        boolean isMovement = false;
+        List<Movement> movements = tbMovement.getItems();
+            for (Movement c : movements) {
+                isMovement = c instanceof Movement;
+                assertTrue(isMovement);
+            }
+    }
+    @Test
+    @Ignore
+    public void test3_NewDepositMovement() {
+        /**
+         * Probando movimiento de tipo "Deposit"
+         */
+        int rowCountOld = tbMovement.getItems().size();
+        
+        Double amount = 251.0;
+        String type = "Deposit";
+        String type2 = "Payment";
+        
+        clickOn("#tfAmount");
+        write(amount.toString());
+        
+        clickOn("#btNewMovement");
+        
+        
+        int rowCountNew = tbMovement.getItems().size();
+        assertEquals(rowCountOld + 1, rowCountNew);
+        Movement lastMovement = tbMovement.getItems().get(rowCountNew - 1);
+        
+        assertEquals(amount, lastMovement.getAmount());
+        assertEquals(type, lastMovement.getDescription().toString());
+        verifyThat("#btUndo", isEnabled());
+        /**
+         * Probando el el movimiento de tipo "Payment"
+         */
+        int rowCountOld2 = tbMovement.getItems().size();
+        clickOn("#tfAmount");
+        write(amount.toString());
+        clickOn("#selectType");
+        //Selecion de Payment en el comboBox
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.DOWN);
+        press(KeyCode.ENTER);
+        
+        clickOn("#btNewMovement");
+        
+        int rowCountNew2 = tbMovement.getItems().size();
+        assertEquals(rowCountOld2 + 1, rowCountNew2);
+        Movement lastMovement2 = tbMovement.getItems().get(rowCountNew2 - 1);
+        
+        assertEquals(amount, lastMovement2.getAmount());
+        assertEquals(type2, lastMovement2.getDescription().toString());
+        verifyThat("#btUndo", isEnabled());
+
+    }
+    
+    @Test
+    @Ignore
+    public void test4_UndoMovement() {
+        TableView<Movement> table  = lookup("#tbMovement").queryTableView();
+        clickOn("#tfAmount");
+        write("500");
+        
+        clickOn("#btNewMovement");
+        verifyThat("#btUndo", isEnabled());
+       
+
+        Movement lastDate = table.getItems().stream()
+                .max((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
+                .get();
+
+        Long lastId = lastDate.getId();
+        int rowCountBefore = table.getItems().size();
+
+        assertNotEquals("No hay datos en la tabla no se puede testear", rowCountBefore, 0);
+        List<Movement> movements = table.getItems();
+        clickOn("#btUndo");
+
+        int rowCountAfter = table.getItems().size();
+        assertEquals(rowCountBefore - 1, rowCountAfter);
+        verifyThat("#btUndo", isDisabled());
+        assertTrue("El movimiento no se ha borrado",
+                table.getItems().stream().noneMatch(m -> m.getId().equals(lastId)));
         
     }
     
     @Test
-    //@Ignore
-    public void test2_UndoMovement() {
-       // verifyThat("#movementViewPane", isVisible());
-        verifyThat("#btUndo", isVisible());
-        clickOn("#btUndo");
-        verifyThat("#btUndo", isDisabled());
-        //verifyThat("")
-    }
-    @Test
-    //@Ignore
-    public void test3_NewMovement() {
-        clickOn("#tfAmount");
-        write("250");
-        clickOn("#selectType");
-        clickOn("Deposit");
-        
-        clickOn("#btNewMovement");
-        verifyThat("#btUndo", isEnabled());
-        
-    }
-    //@Test
     @Ignore
-    public void test4_UndoAfterNewMovement() {
+    public void test5_UndoAfterNewMovement() {
+        
+        int rowCount=tbMovement.getItems().size();
+            assertNotEquals("La tabla no tiene contenido: no se puede hacer el test.",
+                            rowCount,0);
+            
+        Date date=((Movement)tbMovement.getItems()
+                                     .get(tbMovement.getItems().size()-1))
+                                     .getTimestamp();
         clickOn("#btUndo");
         verifyThat("#btUndo", isDisabled());
-    }
-    @Test
-    //@Ignore
-    public void test9_ExitMovement() {
-        clickOn("#btCancel");
-        clickOn("Aceptar");
+        
+        assertEquals("El ultimo movimiento no se ha eliminado!!!",
+                    date,date);
     }
 }

@@ -45,7 +45,7 @@
 				<text><![CDATA[AMOUNT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="455" y="0" width="100" height="20" uuid="6ab493b8-bfa6-4539-bd95-5dfdd8fcbff6"/>
+				<reportElement x="440" y="0" width="115" height="20" uuid="6ab493b8-bfa6-4539-bd95-5dfdd8fcbff6"/>
 				<text><![CDATA[BALANCE]]></text>
 			</staticText>
 			<staticText>
@@ -72,7 +72,7 @@
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="a39af288-1b53-497d-b1a8-49624c74f3da"/>
+				<reportElement x="440" y="0" width="115" height="20" uuid="a39af288-1b53-497d-b1a8-49624c74f3da"/>
 				<textFieldExpression><![CDATA[$F{balance}+" €"]]></textFieldExpression>
 			</textField>
 			<line>

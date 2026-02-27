@@ -185,7 +185,6 @@ public class MovementController implements MenuActionsHandler, Initializable {
             selectType.getSelectionModel().selectFirst();
             
             tbMovement.setItems(movements);
-            LOGGER.info(movements.toString());
             
         } catch (Exception e) {
             
@@ -270,10 +269,10 @@ public class MovementController implements MenuActionsHandler, Initializable {
 
 
         } catch (ClientErrorException e) {
-            LOGGER.severe("Error undoing movement: " + e.getMessage());
+            LOGGER.info("Error undoing movement: " + e.getMessage());
         } catch (Exception e) {
             lbGeneralError.setText(e.toString());
-            LOGGER.severe("Unexpected error: " + e.getMessage());
+            LOGGER.info("Unexpected error: " + e.getMessage());
         }
     }
 
@@ -343,7 +342,7 @@ public class MovementController implements MenuActionsHandler, Initializable {
             LOGGER.info(e.getMessage());
         } catch (Exception e) {
             lbGeneralError.setText(e.toString());
-            LOGGER.severe(e.getMessage());
+            LOGGER.info(e.getMessage());
         }
     }
     private void handlebtInformeOnAction(ActionEvent event){
@@ -363,10 +362,6 @@ public class MovementController implements MenuActionsHandler, Initializable {
             jasperViewer.setVisible(true);
            // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         } catch (JRException ex) {
-            //If there is an error show message and
-            //log it.
-            //showErrorAlert("Error al imprimir:\n"+
-             //               ex.getMessage());
             LOGGER.info(ex.getMessage());
         }
     }

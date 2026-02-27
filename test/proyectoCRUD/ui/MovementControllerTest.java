@@ -6,6 +6,7 @@
 package proyectoCRUD.ui;
 
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javafx.collections.ObservableList;
@@ -86,8 +87,6 @@ public class MovementControllerTest extends ApplicationTest {
                 isMovement = c instanceof Movement;
                 assertTrue(isMovement);
             }
-        
-    
     }
     @Test
     @Ignore
@@ -99,15 +98,10 @@ public class MovementControllerTest extends ApplicationTest {
         
         Double amount = 251.0;
         String type = "Deposit";
-        String type2 = "Deposit";
+        String type2 = "Payment";
         
         clickOn("#tfAmount");
         write(amount.toString());
-        clickOn("#selectType");
-        //Selecion de Deposit en el comboBox
-        press(KeyCode.DOWN);
-        press(KeyCode.DOWN);
-        press(KeyCode.ENTER);
         
         clickOn("#btNewMovement");
         
@@ -138,8 +132,8 @@ public class MovementControllerTest extends ApplicationTest {
         assertEquals(rowCountOld2 + 1, rowCountNew2);
         Movement lastMovement2 = tbMovement.getItems().get(rowCountNew2 - 1);
         
-        assertEquals(amount, lastMovement.getAmount());
-        assertEquals(type, lastMovement.getDescription().toString());
+        assertEquals(amount, lastMovement2.getAmount());
+        assertEquals(type2, lastMovement2.getDescription().toString());
         verifyThat("#btUndo", isEnabled());
 
     }
@@ -150,27 +144,28 @@ public class MovementControllerTest extends ApplicationTest {
         TableView<Movement> table  = lookup("#tbMovement").queryTableView();
         clickOn("#tfAmount");
         write("500");
-        clickOn("#selectType");
-        //tipo de movimiento deposit
-        press(KeyCode.DOWN);
-        press(KeyCode.DOWN);
-        press(KeyCode.ENTER);
+        
         clickOn("#btNewMovement");
         verifyThat("#btUndo", isEnabled());
-        
-        int rowCountBefore=tbMovement.getItems().size();
-        assertNotEquals("La tabla no tiene contenido: no se puede hacer test.",rowCountBefore,0);
-        Long lastId=((Movement)tbMovement.getItems()
-                                     .get(tbMovement.getItems().size()-1))
-                                     .getId();
+       
+
+        Movement lastDate = table.getItems().stream()
+                .max((m1, m2) -> m1.getTimestamp().compareTo(m2.getTimestamp()))
+                .get();
+
+        Long lastId = lastDate.getId();
+        int rowCountBefore = table.getItems().size();
+
+        assertNotEquals("No hay datos en la tabla no se puede testear", rowCountBefore, 0);
+        List<Movement> movements = table.getItems();
         clickOn("#btUndo");
-        //Vuelvo mirar el size de la tabla
-        int rowCountAfter=tbMovement.getItems().size();
-        /*assertEquals("El ultimo movimiento no se ha eliminado",
-                    date,date);*/
-        assertEquals(rowCountBefore -1, rowCountAfter);
+
+        int rowCountAfter = table.getItems().size();
+        assertEquals(rowCountBefore - 1, rowCountAfter);
         verifyThat("#btUndo", isDisabled());
-        //assertTrue(table.getItems().stream().noneMatch(m -> m.getId().equals(lastId));
+        assertTrue("El movimiento no se ha borrado",
+                table.getItems().stream().noneMatch(m -> m.getId().equals(lastId)));
+        
     }
     
     @Test
@@ -189,11 +184,5 @@ public class MovementControllerTest extends ApplicationTest {
         
         assertEquals("El ultimo movimiento no se ha eliminado!!!",
                     date,date);
-    }
-    
-    
-    public void test9_ExitMovement() {
-        clickOn("#btCancel");
-        clickOn("Aceptar");
     }
 }

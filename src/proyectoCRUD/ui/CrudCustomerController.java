@@ -5,6 +5,7 @@
  */
 package proyectoCRUD.ui;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -37,8 +38,18 @@ import proyectoCRUD.model.Account;
 import proyectoCRUD.model.Customer;
 import proyectoCRUD.ui.MenuController;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  * Controller class for the Customer CRUD view.
@@ -96,6 +107,8 @@ public class CrudCustomerController implements Initializable, MenuActionsHandler
     private Button bDelete;
     @FXML
     private Button bRefresh;
+    @FXML
+    private Button bPrint;
     
     private final Stage CustomerStage = new Stage();
     private Scene scene;
@@ -168,6 +181,7 @@ public class CrudCustomerController implements Initializable, MenuActionsHandler
         bDelete.setOnAction(this::handleBtDeleteOnAction);
         bRefresh.setOnAction(this::handleBtRefreshOnAction);
         bAdd.setOnAction(this::handleBtAddOnAction);
+        bPrint.setOnAction(this::handleBtPrintOnAction);
         
         CustomerStage.setOnCloseRequest(this::handleBtExitOnAction);
         tbCustomers.getSelectionModel().selectedItemProperty().addListener(this::handleCustomerTableSelectionChanged);
@@ -652,6 +666,38 @@ public class CrudCustomerController implements Initializable, MenuActionsHandler
             new Alert(Alert.AlertType.INFORMATION,e.getMessage()).showAndWait();
         }
     }
+    private void handleBtPrintOnAction(Event event){
+        try {
+            LOGGER.info("Beginning printing action...");
+            JasperReport report=
+                JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/proyectoCRUD/ui/resources/CustomerReport.jrxml"));
+            //Data for the report: a collection of UserBean passed as a JRDataSource 
+            //implementation 
+            JRBeanCollectionDataSource dataItems=
+                    new JRBeanCollectionDataSource((Collection<Customer>)this.tbCustomers.getItems());
+            //Map of parameter to be passed to the report
+            // Cargar la imagen del logo como InputStream
+            InputStream logoStream = getClass().getResourceAsStream("/proyectoCRUD/ui/resources/Logo.png");
+
+            // Map of parameter to be passed to the report
+            Map<String,Object> parameters = new HashMap<>();
+            // Inyectamos el logo en los parámetros
+            parameters.put("logoFMD", logoStream); 
+
+            // Fill report with data
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataItems);
+            //Create and show the report window. The second parameter false value makes 
+            //report window not to close app.
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint,false);
+            jasperViewer.setVisible(true);
+           // jasperViewer.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        } catch (JRException ex) {
+            LOGGER.info(ex.getMessage());
+            new Alert(Alert.AlertType.INFORMATION,"Error while creating report for customers!").showAndWait();
+        }
+    }
+    
     /**
      * Fetches all customers from the server using the REST client and updates the TableView items.
      */

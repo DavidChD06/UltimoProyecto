@@ -10,7 +10,7 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: #00000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.CrudCustomerController">
    <children>
         <!--FIXME: NO TOCAR la siguiente modificación necesaria: fx:id deber tener el valor "menuInclude" -->
-        <fx:include source="Menu.fxml" fx:id="menuInclude"/>
+        <fx:include fx:id="menuInclude" source="Menu.fxml" />
       <!--fx:include fx:id="menuAccount" source="Menu.fxml" /-->
       <Label layoutX="275.0" layoutY="87.0" prefHeight="19.0" prefWidth="202.0" text="Customers administration">
          <font>
@@ -53,5 +53,6 @@
             <Image url="proyectoCRUD/ui/resources/logoRecortado.png" />
          </image>
       </ImageView>
+      <Button fx:id="bPrint" layoutX="1288.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" style="-fx-background-color: lime; -fx-font-weight: bold;" text="Print" />
    </children>
 </Pane>

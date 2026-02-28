@@ -39,6 +39,11 @@ public class MenuController {
     public void setMenuActionsHandler(MenuActionsHandler handler) {
         this.handler = handler;
     }
+    private Stage stage; 
+    
+    public void setStage(Stage stage) { 
+        this.stage = stage; 
+    } 
 
     @FXML
     private void handleCreate() {
@@ -75,21 +80,21 @@ public class MenuController {
     }
 
     @FXML
+    //Correccion del LogOut para que vuelva a la ventana principal correctamente
     public void menuLogOut(ActionEvent event) {
-        try {
+         try { 
 
-            Stage stage = getAccountStage(event);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyectoCRUD/ui/SignIn.fxml")); 
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignIn.fxml"));
-            Parent root = loader.load();
-            SignInController controller = loader.getController();
-            controller.init(stage, root);
+            Parent root = loader.load(); 
+            SignInController controller = loader.getController(); 
+            controller.init(this.stage, root); 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Log Out Error", "Could not load the sign-in window.");
-        }
-    }
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+            showAlert("Error", "Log Out Error","Could not load the sign-in window."); 
+        } 
+    } 
 
     @FXML
     private void helpAccount(ActionEvent event) {
@@ -109,18 +114,6 @@ public class MenuController {
     @FXML
     private void helpAboutApp(ActionEvent event) {
         ventanaAyuda("About the App", "/proyectoCRUD/ui/resources/helpAbout.html");
-    }
-     private Stage getAccountStage(ActionEvent event) {
-        Object source = event.getSource();
-        
-        if (source instanceof MenuItem) {
-            // Truco para obtener el stage desde un ítem de menú desplegable
-            return (Stage) ((MenuItem) source).getParentPopup().getOwnerWindow();
-        } else if (source instanceof Node) {
-            // Forma normal para botones
-            return (Stage) ((Node) source).getScene().getWindow();
-        }
-        return null;
     }
      
       private void showAlert(String title, String header, String content) {

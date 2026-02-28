@@ -28,9 +28,11 @@ import javax.ws.rs.NotAuthorizedException;
 import proyectoCRUD.logic.CustomerRESTClient;
 
 /**
- * Clase de controlador FXML para la ventana Iniciar sesión.
- * Maneja el inicio de sesión del usuario, la navegación hasta el registro y la salida de la aplicación.
- * Interactúa con CustomerRESTClient para la autenticación del usuario.
+ * Clase de controlador FXML para la ventana Iniciar sesión. Maneja el inicio de
+ * sesión del usuario, la navegación hasta el registro y la salida de la
+ * aplicación. Interactúa con CustomerRESTClient para la autenticación del
+ * usuario.
+ *
  * @author Luis Felipe Acosta Osorno
  */
 public class SignInController {
@@ -55,9 +57,11 @@ public class SignInController {
         LOGGER.info("Initializing window");
         //Asociamos la escena a la primera ventana.
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/proyectoCRUD/ui/resources/Styles.css").toExternalForm());
+        stage.setScene(scene);
         //Se establecen las propiedades de la vetana.
         stage.setScene(scene);
-        this.stage=stage;
+        this.stage = stage;
         //Establecer el titulo de la ventana
         stage.setTitle("Sign In");
         //La ventana no es redimensionable
@@ -78,60 +82,65 @@ public class SignInController {
         stage.show();
         stage.setOnCloseRequest(this::handleExitOnAction);
     }
+
     /**
-    * Inicializa la etapa principal de la ventana Iniciar sesión.
-    * Configura la escena, las propiedades del escenario (título, redimensionable), los estados de control iniciales,
-    * y oyentes para cambios de campo y enfoque, y controladores de acciones para botones e hipervínculos.
-    * @param stage La etapa principal de esta ventana.
-    * @param root El nodo raíz del diseño FXML para esta escena..
-    */
-   
+     * Inicializa la etapa principal de la ventana Iniciar sesión. Configura la
+     * escena, las propiedades del escenario (título, redimensionable), los
+     * estados de control iniciales, y oyentes para cambios de campo y enfoque,
+     * y controladores de acciones para botones e hipervínculos.
+     *
+     * @param stage La etapa principal de esta ventana.
+     * @param root El nodo raíz del diseño FXML para esta escena..
+     */
 
     private void handleAlert(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
     /**
-     * Muestra un cuadro de diálogo de alerta de error con un mensaje específico.
+     * Muestra un cuadro de diálogo de alerta de error con un mensaje
+     * específico.
+     *
      * @param mensaje El mensaje de error que se mostrará en la alerta.
      */
 
     private void handleRegisterOnAction(ActionEvent event) {
         try {
-           
+
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("SignUp.fxml"));
             Parent root = loader.load();
-            
-           SignUpController controller = loader.getController();
-            controller.init(this.stage,root);
-            
+
+            SignUpController controller = loader.getController();
+            controller.init(this.stage, root);
 
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
             handleAlert("¡Error, when going to registry!");
         }
     }
+
     /**
-    * Maneja la acción cuando se hace clic en el hipervínculo Registrar.
-    * Carga y navega a la ventana de registro (SignUp.fxml).
-    * Registra y muestra una alerta de error si falla la navegación.
-    * @param event Evento ActionEvent generado para el hipervínculo. 
+     * Maneja la acción cuando se hace clic en el hipervínculo Registrar. Carga
+     * y navega a la ventana de registro (SignUp.fxml). Registra y muestra una
+     * alerta de error si falla la navegación.
+     *
+     * @param event Evento ActionEvent generado para el hipervínculo.
      */
 
-        private void handleLoginOnAction(ActionEvent event) {
+    private void handleLoginOnAction(ActionEvent event) {
         try {
-            if(tfEmail.getText().equals("admin@admin.com")&& pfPassword.getText().equals("admin")){
+            if (tfEmail.getText().equals("admin@admin.com") && pfPassword.getText().equals("admin")) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Crud_Customer.fxml"));
                 Parent root = loader.load();
                 CrudCustomerController controller = loader.getController();
                 controller.init(this.stage, root);
-            }
-            else{
+            } else {
                 //Comprobación de los campos
-                if(!tfEmail.getText().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$") || tfEmail.getText().isEmpty()){
-                throw new Exception("¡Email and password must be filled!");
+                if (!tfEmail.getText().matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$") || tfEmail.getText().isEmpty()) {
+                    throw new Exception("¡Email and password must be filled!");
                 }
                 //Crear un objeto customer
                 CustomerRESTClient client = new CustomerRESTClient();
@@ -140,9 +149,9 @@ public class SignInController {
                         tfEmail.getText().trim(), pfPassword.getText().trim());
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("¡Welcome "+customer.getFirstName()+"!");
+                alert.setContentText("¡Welcome " + customer.getFirstName() + "!");
                 alert.showAndWait();
-            //Abrir la ventana de change password
+                //Abrir la ventana de change password
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Account.fxml"));
                 Parent root = loader.load();
                 AccountController controller = loader.getController();
@@ -150,23 +159,19 @@ public class SignInController {
                 controller.setCustomer(customer);
                 controller.init(this.stage, root);
             }
-            
-          
 
-            
         } catch (NotAuthorizedException a) {
             LOGGER.warning(a.getMessage());
             handleAlert("¡The email or password is incorrect!");
             tfEmail.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
             pfPassword.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-            
-            
+
         } catch (InternalServerErrorException b) {
             LOGGER.warning(b.getMessage());
             handleAlert("¡Internal server not found,\n"
                     + "please try again after a few minutes,\n "
                     + "if the problem persists, contact you company!");
-            
+
         } catch (Exception e) {
             LOGGER.warning(e.getMessage());
             handleAlert("¡Email and password must be to filled!");
@@ -177,18 +182,22 @@ public class SignInController {
     }
 
     /**
-    * Maneja la acción cuando se hace clic en el botón Iniciar sesión.
-    * Autentica al usuario llamando al cliente REST con el correo electrónico y la contraseña proporcionados.
-    * Al iniciar sesión correctamente, muestra un mensaje de bienvenida.
-    * Maneja excepciones específicas:
-    * {NotAuthorizedException} para credenciales incorrectas (muestra alerta de error y resalta campos).
-    * {InternalServerErrorException} para problemas del lado del servidor (muestra una alerta de error del servidor).
-    * Otras excepciones para errores generales (por ejemplo, campos vacíos que no se detectan en los controles).
-    * @param event Evento ActionEvent generado para el botón Login.
-    */
+     * Maneja la acción cuando se hace clic en el botón Iniciar sesión.
+     * Autentica al usuario llamando al cliente REST con el correo electrónico y
+     * la contraseña proporcionados. Al iniciar sesión correctamente, muestra un
+     * mensaje de bienvenida. Maneja excepciones específicas:
+     * {NotAuthorizedException} para credenciales incorrectas (muestra alerta de
+     * error y resalta campos). {InternalServerErrorException} para problemas
+     * del lado del servidor (muestra una alerta de error del servidor). Otras
+     * excepciones para errores generales (por ejemplo, campos vacíos que no se
+     * detectan en los controles).
+     *
+     * @param event Evento ActionEvent generado para el botón Login.
+     */
     private void textChangeListener(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-    handleChecks();
+        handleChecks();
     }
+
     /**
      * @param llama al evento hanleChecks
      */
@@ -197,26 +206,34 @@ public class SignInController {
         boolean fPassword = fPassword();
         btnLogin.setDisable(!(fEmail && fPassword));
     }
+
     /**
-    * Comprueba si los campos de correo electrónico y contraseña están completos.
-    * Habilita el botón Iniciar sesión solo si {#fEmail()} y {#fPassword()} devuelven verdadero.
-    */
+     * Comprueba si los campos de correo electrónico y contraseña están
+     * completos. Habilita el botón Iniciar sesión solo si {#fEmail()} y
+     * {#fPassword()} devuelven verdadero.
+     */
     private boolean fEmail() {
         boolean isfEmail = tfEmail.getText().isEmpty();
         return !isfEmail;
     }
+
     /**
-    * Comprueba si el campo de texto del correo electrónico *no* está vacío.
-    * * @return verdadero si el campo de correo electrónico contiene texto, falso en caso contrario.
-    */
+     * Comprueba si el campo de texto del correo electrónico *no* está vacío.
+     *
+     * * @return verdadero si el campo de correo electrónico contiene texto,
+     * falso en caso contrario.
+     */
 
     private boolean fPassword() {
         boolean isfPassword = pfPassword.getText().isEmpty();
         return !isfPassword;
     }
+
     /**
-    * Comprueba si el campo de texto de la contraseña *no* está vacío.
-    * @return verdadero si el campo de contraseña contiene texto; falso en caso contrario.
+     * Comprueba si el campo de texto de la contraseña *no* está vacío.
+     *
+     * @return verdadero si el campo de contraseña contiene texto; falso en caso
+     * contrario.
      */
 
     private void handleExitOnAction(Event event) {
@@ -227,7 +244,7 @@ public class SignInController {
         alert.setTitle("¡Confirm Exit!");
         alert.showAndWait();
 
-       if (alert.getResult() == ButtonType.YES) {
+        if (alert.getResult() == ButtonType.YES) {
             //Lanzamos la ventana emergente para pedir confirmación de salida
             Stage stage = (Stage) btnExit.getScene().getWindow();
             stage.close();
@@ -236,44 +253,52 @@ public class SignInController {
         event.consume();
 
     }
+
     /**
-    * Maneja la acción cuando se hace clic en el botón Salir.
-    * Muestra un cuadro de diálogo de confirmación y cierra la etapa de solicitud si el usuario confirma.
-    * * @param event Evento ActionEvent generado para el botón Salir.
+     * Maneja la acción cuando se hace clic en el botón Salir. Muestra un cuadro
+     * de diálogo de confirmación y cierra la etapa de solicitud si el usuario
+     * confirma.
+     *
+     * * @param event Evento ActionEvent generado para el botón Salir.
      */
-    private void handlepfPasswordFocusChange(ObservableValue observable, 
-            boolean oldValue, boolean newValue){
-        
-        if(newValue){
-        pfPassword.setStyle("-fx-border-color: grey; -fx-border-width: 2px;");
+    private void handlepfPasswordFocusChange(ObservableValue observable,
+            boolean oldValue, boolean newValue) {
+
+        if (newValue) {
+            pfPassword.setStyle("-fx-border-color: grey; -fx-border-width: 2px;");
         }
-        
-        
+
     }
+
     /**
-    * Maneja el evento de cambio de enfoque para el campo de contraseña.
-    * Cuando el campo gana foco (newValue es verdadero), restablece el estilo del borde a gris, 
-    * eliminar cualquier resaltado de error anterior. 
-    * * @param observable El valor observable que se escucha.
-    * @param oldValue El estado de enfoque anterior.
-    * @param newValue El nuevo estado de foco (verdadero si el campo tiene foco).
-    */
-    
-    private void handletfEmailFocusChange(ObservableValue observable, 
-            boolean oldValue, boolean newValue){
-        
-            if(newValue){
+     * Maneja el evento de cambio de enfoque para el campo de contraseña. Cuando
+     * el campo gana foco (newValue es verdadero), restablece el estilo del
+     * borde a gris, eliminar cualquier resaltado de error anterior.
+     *
+     * * @param observable El valor observable que se escucha.
+     * @param oldValue El estado de enfoque anterior.
+     * @param newValue El nuevo estado de foco (verdadero si el campo tiene
+     * foco).
+     */
+
+    private void handletfEmailFocusChange(ObservableValue observable,
+            boolean oldValue, boolean newValue) {
+
+        if (newValue) {
             tfEmail.setStyle("-fx-border-color: grey; -fx-border-width: 2px;");
-            }
-    
+        }
+
     }
     /**
-    * Maneja el evento de cambio de enfoque para el campo de texto del correo electrónico.
-    * Cuando el campo gana foco (newValue es verdadero), restablece el estilo del borde a gris, 
-    * eliminar cualquier resaltado de error anterior.
-    * * @param observable El valor observable que se escucha.
-    * @param oldValue El estado de enfoque anterior.
-    * @param newValue El nuevo estado de foco (verdadero si el campo tiene foco).
-    */
+     * Maneja el evento de cambio de enfoque para el campo de texto del correo
+     * electrónico. Cuando el campo gana foco (newValue es verdadero),
+     * restablece el estilo del borde a gris, eliminar cualquier resaltado de
+     * error anterior.
+     *
+     * * @param observable El valor observable que se escucha.
+     * @param oldValue El estado de enfoque anterior.
+     * @param newValue El nuevo estado de foco (verdadero si el campo tiene
+     * foco).
+     */
 
 }

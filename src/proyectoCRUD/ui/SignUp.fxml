@@ -6,7 +6,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.SignUpController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyectoCRUD.ui.SignUpController">
    <children>
       <TextField fx:id="tfName" layoutX="329.0" layoutY="262.0" prefHeight="25.0" prefWidth="157.0" promptText="Michael" />
       <TextField fx:id="tfMidInit" layoutX="603.0" layoutY="262.0" prefHeight="25.0" prefWidth="70.0" promptText="D." />
@@ -31,7 +31,7 @@
       <Label layoutX="240.0" layoutY="576.0" text="Password" />
       <Label layoutX="189.0" layoutY="621.0" text="Confirm password" />
       <Button fx:id="bbutton" layoutX="458.0" layoutY="682.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="109.0" text="Register" />
-      <ImageView fitHeight="105.0" fitWidth="265.0" layoutX="369.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="105.0" fitWidth="265.0" layoutX="369.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true" blendMode="MULTIPLY">
          <image>
             <Image url="proyectoCRUD/ui/resources/Logo.png" />
          </image>

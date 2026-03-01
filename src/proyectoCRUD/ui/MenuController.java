@@ -95,6 +95,22 @@ public class MenuController {
             showAlert("Error", "Log Out Error","Could not load the sign-in window."); 
         } 
     } 
+    
+    @FXML
+    private void changePassword(ActionEvent event){
+         try { 
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyectoCRUD/ui/ChangePassword.fxml")); 
+
+            Parent root = loader.load(); 
+            ChangePasswordController controller = loader.getController(); 
+            controller.init(this.stage, root); 
+
+        } catch (IOException e) { 
+            e.printStackTrace(); 
+            showAlert("Error", "Log Out Error","Could not load the sign-in window."); 
+        } 
+    }
 
     @FXML
     private void helpAccount(ActionEvent event) {

@@ -11,7 +11,7 @@
         <!--FIXME: NO TOCAR la siguiente modificación necesaria: fx:id deber tener el valor "menuInclude" -->
         <fx:include fx:id="menuInclude" source="Menu.fxml" />
       <!--fx:include fx:id="menuAccount" source="Menu.fxml" /-->
-      <ImageView fitHeight="150.0" fitWidth="266.0" layoutX="387.0" layoutY="36.0" blendMode="MULTIPLY">
+      <ImageView blendMode="MULTIPLY" fitHeight="150.0" fitWidth="266.0" layoutX="387.0" layoutY="36.0">
          <image>
             <Image url="proyectoCRUD/ui/resources/Logo.png" />
          </image>
@@ -23,12 +23,12 @@
       <TableView fx:id="tbvAccounts" layoutX="14.0" layoutY="207.0" prefHeight="357.0" prefWidth="879.0">
         <columns>
           <TableColumn fx:id="tcId" prefWidth="75.0" text="ID" />
-          <TableColumn fx:id="tcDescription" prefWidth="207.0" text="DESCRIPTION" />
-            <TableColumn fx:id="tcType" prefWidth="68.0" text="TYPE" />
-            <TableColumn fx:id="tcBeginBalance" prefWidth="148.0" text="BEGIN BALANCE" />
-            <TableColumn fx:id="tcBalance" prefWidth="120.0" text="BALANCE" />
-            <TableColumn fx:id="tcCreditLine" prefWidth="147.0" text="CREDIT LINE" />
-            <TableColumn fx:id="tcBeginBalanceTimestamp" prefWidth="113.0" text="DATE" />
+          <TableColumn fx:id="tcDescription" prefWidth="189.0" text="DESCRIPTION" />
+            <TableColumn fx:id="tcType" prefWidth="86.0" text="TYPE" />
+            <TableColumn fx:id="tcBeginBalance" prefWidth="135.0" text="BEGIN BALANCE" />
+            <TableColumn fx:id="tcBalance" prefWidth="133.0" text="BALANCE" />
+            <TableColumn fx:id="tcCreditLine" prefWidth="133.0" text="CREDIT LINE" />
+            <TableColumn fx:id="tcBeginBalanceTimestamp" prefWidth="127.0" text="DATE" />
         </columns>
       </TableView>
       <ToggleButton fx:id="btnAdd" layoutX="904.0" layoutY="207.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="AddAccount" />

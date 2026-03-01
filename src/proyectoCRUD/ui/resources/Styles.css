@@ -7,24 +7,25 @@ and open the template in the editor.
     Created on : 27-feb-2026, 12:02:15
     Author     : felipe
 */
-/* =======================================================
-   FONDO GENERAL (Degradado Radial Llamativo)
-   ======================================================= */
+/*
+   FONDO GENERAL
+*/
 .root {
     -fx-background-color: radial-gradient(center 50% 5%, radius 90%, #ffffff 0%, #8ec5fc 50%, #e0c3fc 100%);
     -fx-font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -fx-font-size: 14px;
 }
 
-/* =======================================================
+/*
    TABLA FLOTANTE
-   ======================================================= */
+*/
 .table-view {
-    -fx-background-color: rgba(255, 255, 255, 0.85);
-    -fx-background-radius: 12px;
-    -fx-border-radius: 12px;
-    -fx-border-color: transparent;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 25, 0, 0, 8); 
+    -fx-background-color: rgba(255, 255, 255, 0.55); 
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #ffffff; 
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(142, 197, 252, 0.4), 30, 0, 0, 10); 
     -fx-padding: 5px;
 }
 
@@ -44,29 +45,28 @@ and open the template in the editor.
     -fx-font-weight: bold;
 }
 
+/* Filas de la tabla */
 .table-row-cell {
-    -fx-cell-size: 40px; /* Altura de fila ajustada */
+    -fx-cell-size: 40px; 
     -fx-background-color: transparent;
     -fx-border-width: 0 0 1px 0;
     -fx-border-color: rgba(0,0,0,0.05);
 }
 
 .table-row-cell:odd {
-    -fx-background-color: rgba(255, 255, 255, 0.4);
+    -fx-background-color: rgba(255, 255, 255, 0.3);
 }
 
 .table-row-cell:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-color: rgba(255, 255, 255, 0.8);
 }
 
-/* =======================================================
-   SELECCIÓN DE FILA (Limpia y sin saltos)
-   ======================================================= */
+/* Fila seleccionada */
 .table-row-cell:selected {
-    -fx-background-color: #ffffff; 
+    -fx-background-color: rgba(255, 255, 255, 0.95); 
     -fx-border-color: #4facfe; 
     -fx-border-width: 0 0 0 4px; 
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 242, 254, 0.2), 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(79, 172, 254, 0.3), 15, 0, 0, 0);
     -fx-background-insets: 0; 
 }
 
@@ -77,76 +77,97 @@ and open the template in the editor.
     -fx-table-cell-border-color: transparent;
 }
 
-/* Celdas centradas verticalmente por defecto */
+/* Alineación y márgenes corregidos */
 .table-cell {
-    -fx-alignment: CENTER-LEFT; 
+    -fx-padding: 0 10px; 
 }
 
-/* =======================================================
-   BOTONES GLOBALES (Más pequeños para que quepa el texto)
-   ======================================================= */
-.button {
-    -fx-font-size: 12px; /* Letra más pequeña */
-    -fx-min-width: 100px; /* Ancho ajustado */
-    -fx-max-width: 120px;
+#tcCreditLine {
+    -fx-alignment: CENTER-RIGHT;
+    -fx-padding: 0 20px 0 0; 
 }
 
-/* =======================================================
-   BOTONES PRINCIPALES
-   ======================================================= */
-#btnLogin, #btnAdd {
+#tcBeginBalanceTimestamp {
+    -fx-alignment: CENTER;
+}
+
+/*
+   BOTONES GLOBALES
+ */
+.button, .toggle-button {
+    -fx-font-size: 12px; 
+    -fx-min-width: 115px; 
+    -fx-max-width: 130px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 10px; 
+    -fx-background-radius: 20px; 
+    -fx-border-radius: 20px;
+}
+
+/* Botones Principales (Azules) */
+#btnLogin, #btnAdd, #btChangePass, #bbutton, #btNewMovement, #bAdd {
     -fx-background-color: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-    -fx-padding: 8px 10px; /* Relleno reducido */
-    -fx-cursor: hand;
+    -fx-border-color: transparent;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 242, 254, 0.4), 10, 0, 0, 4);
 }
-#btnLogin:hover, #btnAdd:hover {
+#btnLogin:hover, #btnAdd:hover, #btChangePass:hover, #bbutton:hover, #btNewMovement:hover, #bAdd:hover {
     -fx-background-color: linear-gradient(to right, #00f2fe 0%, #4facfe 100%);
 }
 
-/* =======================================================
-   BOTONES SECUNDARIOS Y PELIGRO
-   ======================================================= */
-#btnRefresh, #btnReport, #btnMovement, #btnDelete, #btnExit {
+/* Botones Secundarios (Blancos/Azules) */
+#btnRefresh, #btnReport, #btnMovement, #btUndo, #btInforme, #bRefresh, #bPrint {
     -fx-background-color: rgba(255, 255, 255, 0.9);
-    -fx-border-radius: 6px;
-    -fx-background-radius: 6px;
     -fx-border-width: 2px;
-    -fx-cursor: hand;
-    -fx-font-weight: bold;
-    -fx-padding: 8px 10px; /* Relleno reducido */
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
-}
-
-#btnRefresh, #btnReport, #btnMovement {
     -fx-text-fill: #4facfe;
     -fx-border-color: #4facfe;
 }
-#btnRefresh:hover, #btnReport:hover, #btnMovement:hover {
+#btnRefresh:hover, #btnReport:hover, #btnMovement:hover, #btUndo:hover, #btInforme:hover, #bRefresh:hover, #bPrint:hover {
     -fx-background-color: #4facfe;
     -fx-text-fill: white;
 }
 
-#btnDelete, #btnExit {
+/* Botones de Peligro (Rojos) */
+#btnDelete, #btnExit, #btExit, #btCancel, #bDelete, #bExit {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
     -fx-text-fill: #ff4b2b;
     -fx-border-color: #ff4b2b;
 }
-#btnDelete:hover, #btnExit:hover {
+#btnDelete:hover, #btnExit:hover, #btExit:hover, #btCancel:hover, #bDelete:hover, #bExit:hover {
     -fx-background-color: #ff4b2b;
     -fx-text-fill: white;
 }
 
-/* =======================================================
+/*
+   BOTONES DEL LOGIN 
+*/
+#btnLogin, #btnExit {
+    -fx-min-width: 110px;
+    -fx-pref-width: 110px;
+    -fx-max-width: 110px;
+}
+
+/*
    MENÚ SUPERIOR Y CAMPOS DE TEXTO
-   ======================================================= */
+*/
 .menu-bar {
-    -fx-background-color: rgba(255, 255, 255, 0.7);
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-background-color: rgba(255, 255, 255, 0.6); 
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 2);
     -fx-padding: 5px 10px;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #1a1a1a; 
+    -fx-font-weight: bold;
+}
+
+.menu:hover, .menu:showing {
+    -fx-background-color: rgba(255, 255, 255, 0.6); 
+    -fx-background-radius: 4px;
 }
 
 .text-field, .password-field {
@@ -160,4 +181,71 @@ and open the template in the editor.
 .text-field:focused, .password-field:focused {
     -fx-border-color: #4facfe;
     -fx-border-width: 2px;
+}
+
+/* =======================================================
+   MENÚ DESPLEGABLE (Context Menu superior)
+   ======================================================= */
+.context-menu {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: rgba(79, 172, 254, 0.3);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 10, 0, 0, 4);
+    -fx-padding: 5px;
+}
+
+.menu-item .label {
+    -fx-text-fill: #1a1a1a;
+    -fx-font-weight: bold;
+}
+
+.menu-item:focused {
+    -fx-background-color: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+    -fx-background-radius: 4px;
+}
+.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+
+/* =======================================================
+   DESPLEGABLES (ComboBox)
+   ======================================================= */
+.combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.combo-box:focused, .combo-box:showing {
+    -fx-border-color: #4facfe;
+    -fx-border-width: 2px;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #1a1a1a;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+.combo-box .arrow {
+    -fx-background-color: #4facfe;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 4);
+}
+
+.combo-box-popup .list-cell:hover, 
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #4facfe;
+    -fx-text-fill: white;
 }

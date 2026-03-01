@@ -23,6 +23,7 @@
             <items>
               <MenuItem fx:id="menuLogOut" mnemonicParsing="false" onAction="#menuLogOut" text="Log out" />
                   <MenuItem fx:id="menuExitApp" mnemonicParsing="false" onAction="#menuExitApp" text="Exit App" />
+                  <MenuItem fx:id="changePassword" mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
             </items>
           </Menu>
           <Menu fx:id="Help" mnemonicParsing="false" text="Help">

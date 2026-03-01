@@ -19,7 +19,7 @@
       <PasswordField fx:id="pfPassword" layoutX="362.0" layoutY="351.0" prefHeight="25.0" prefWidth="261.0" promptText="Password" />
       <Label layoutX="362.0" layoutY="400.0" text="Don't have an account?" />
       <Hyperlink fx:id="Register" layoutX="558.0" layoutY="396.0" text="Register" />
-      <Button fx:id="btnLogin" layoutX="468.0" layoutY="439.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="154.0" text="Login" textFill="#0911f8" />
+      <Button fx:id="btnLogin" layoutX="486.0" layoutY="439.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="144.0" text="Login" textFill="#0911f8" />
       <Button fx:id="btnExit" layoutX="362.0" layoutY="439.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="89.0" text="Exit" textFill="#063ef8" />
    </children>
 </Pane>

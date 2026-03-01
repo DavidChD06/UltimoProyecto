@@ -127,12 +127,13 @@ public class MovementController implements MenuActionsHandler, Initializable {
                     }, account.getId().toString()));        
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/proyectoCRUD/ui/resources/Styles.css").toExternalForm());
-            stage.setScene(scene);
-            //movementStage.initModality(Modality.APPLICATION_MODAL);
+
             movementStage.setScene(scene);
             movementStage.setTitle("Movements");
             movementStage.setResizable(false);
-                
+            movementStage.initOwner(stage);
+            movementStage.initModality(Modality.WINDOW_MODAL);
+            
             btNewMovement.setDisable(false);
             
             btCancel.setDisable(false);

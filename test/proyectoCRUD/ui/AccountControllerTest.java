@@ -12,6 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +23,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.runners.MethodSorters;
 import static org.testfx.api.FxAssert.verifyThat;
+import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit.ApplicationTest;
 import static org.testfx.matcher.base.NodeMatchers.isEnabled;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -61,7 +63,7 @@ public class AccountControllerTest extends ApplicationTest {
 
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test1_Read() {
         TableView<Account> tbvAccounts = lookup("#tbvAccounts").queryTableView();
@@ -70,7 +72,7 @@ public class AccountControllerTest extends ApplicationTest {
         assertTrue("Some data in the table is not a account", accounts.stream().allMatch(a -> a instanceof Account));
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test2_Create() {
 
@@ -101,10 +103,19 @@ public class AccountControllerTest extends ApplicationTest {
         assertEquals("The account has not been added!!!",
                 cuentasIniciales + 1,
                 accounts.stream().filter(a -> a.getDescription().equals(description)).count());
-
+        Account nuevaCuenta = accounts.stream()
+                .filter(a -> a.getDescription().equals(description))
+                .findFirst()
+                .orElse(null);
+                
+        assertNotNull("La cuenta no se ha encontrado para verificar sus datos.", nuevaCuenta);
+        assertEquals("El balance inicial no se guardó correctamente.", 
+                Double.valueOf(2000.0), nuevaCuenta.getBeginBalance());
+        assertEquals("El tipo de cuenta no se guardó correctamente.", 
+                "CREDIT", nuevaCuenta.getType().toString().toUpperCase());
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test3_Update() {
 
@@ -144,10 +155,12 @@ public class AccountControllerTest extends ApplicationTest {
         assertEquals("The description has not been updated!!!",
                 "Modification Description",
                 account.getDescription());
+        assertEquals("The credit line has not been updated!!!", 
+                Double.valueOf(1500.0), account.getCreditLine());
 
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test4_Delete() {
 
@@ -165,6 +178,8 @@ public class AccountControllerTest extends ApplicationTest {
             i++;
         }
         assertNotEquals("No hay cuentas sin movimientos", -1, rowIndex);
+        Account accountToDelete = tbvAccounts.getItems().get(rowIndex);
+        Long deletedId = accountToDelete.getId();
         //Busca la primera linea de la tabla y haz click en ella
         Node row = lookup(".table-row-cell").nth(rowIndex).query();
         assertNotNull("Row is null: table has not that row. ", row);
@@ -176,9 +191,11 @@ public class AccountControllerTest extends ApplicationTest {
         clickOn("Aceptar");
         assertEquals("The row has not been deleted!!!",
                 rowCount - 1, tbvAccounts.getItems().size());
+        boolean idExists = tbvAccounts.getItems().stream().anyMatch(a -> a.getId().equals(deletedId));
+        assertTrue("The account still exists in the model after deletion!!!", !idExists);
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test5_NoDelete() {
 
@@ -209,11 +226,18 @@ public class AccountControllerTest extends ApplicationTest {
                 rowCount, tbvAccounts.getItems().size());
     }
 
-    @Ignore
+    //@Ignore
     @Test
     public void test6_AccountCancel() {
         clickOn("#btnAdd");
         clickOn("#btnDelete");
+    }
+    @After
+    public void test7_Exit()throws Exception{
+        release(new KeyCode[]{});
+        release(new javafx.scene.input.MouseButton[]{});
+        FxToolkit.hideStage();
+        FxToolkit.cleanupStages();
     }
 
 }
